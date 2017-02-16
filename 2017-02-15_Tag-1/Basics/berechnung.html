@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<script>
+
+
+	window.onload = function(){
+
+		// Reset
+		document.getElementById('number1').value = '';
+		document.getElementById('number2').value = '';
+
+		// 1. Variabledefinieren
+		var zahl1, zahl2, ergebnis
+
+		function getIntegerOfInput(){
+			// 2. Daten einlesen
+			zahl1 = document.getElementById('number1').value * 1;
+			zahl2 = document.getElementById('number2').value * 1;
+		}
+
+		document.getElementById('btn__plus').onclick = function(e){
+			e.preventDefault();
+
+			// 2. Daten einlesen
+			zahl1 = document.getElementById('number1').value * 1;
+			zahl2 = document.getElementById('number2').value * 1;
+
+			if(zahl1 > 0 && zahl2 > 0) {
+				// 3. Datenverarbeitung
+				ergebnis = zahl1 + zahl2;
+				// 4. Ausgabe
+				document.getElementById('ergebnis').innerHTML = 'Die Summe ist: <span id="spanErgebnis">' + ergebnis + '</span>';
+				// 5. Styles
+				document.getElementById('spanErgebnis').style.color = 'red';
+			} else {
+				document.getElementById('ergebnis').innerHTML = '!!!FEHLER!!!'
+			}
+		};
+
+		document.getElementById('btn__minus').onclick = function(e){
+			e.preventDefault();
+			getIntegerOfInput();
+			ergebnis = zahl1 - zahl2;
+			document.getElementById('ergebnis').innerHTML = 'Die Summe ist: <span id="spanErgebnis">' + ergebnis + '</span>';
+			document.getElementById('spanErgebnis').style.color = 'red';
+		}
+
+		document.getElementById('btn__mal').onclick = function(e){
+			e.preventDefault();
+			getIntegerOfInput();
+			ergebnis = zahl1 * zahl2;
+			document.getElementById('ergebnis').innerHTML = 'Die Summe ist: <span id="spanErgebnis">' + ergebnis + '</span>';
+			document.getElementById('spanErgebnis').style.color = 'red';
+		}
+
+		document.getElementById('btn__dividiert').onclick = function(e){
+			e.preventDefault();
+			getIntegerOfInput();
+			ergebnis = zahl1 / zahl2;
+			document.getElementById('ergebnis').innerHTML = 'Die Summe ist: <span id="spanErgebnis">' + ergebnis + '</span>';
+			document.getElementById('spanErgebnis').style.color = 'red';
+		}
+
+	}
+	</script>
+	<style>
+	</style>
+</head>
+<body>
+	<form>
+		Zahl1: <input type="text" name="number1" id="number1" value="0"><br>
+		Zahl2: <input type="text" name="number2" id="number2" value="0"><br>
+		<input type="submit" name="submit" id="btn__plus" value="+">
+		<input type="submit" name="submit" id="btn__minus" value="-">
+		<input type="submit" name="submit" id="btn__mal" value="*">
+		<input type="submit" name="submit" id="btn__dividiert" value="/"><br>
+		<span id="ergebnis"></span>
+	</form>
+</body>
+</html>

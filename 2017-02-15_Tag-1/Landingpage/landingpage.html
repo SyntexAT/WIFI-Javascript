@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+<head>
+	<title>HTML & CSS Testseite</title>
+	<meta charset="utf-8">
+	<script>
+
+	</script>
+	<style>
+		.header,
+		.newsletter,
+		.contentwrap,
+		.socialmedia {
+			display: block;
+			width: 1000px;
+			margin: 0 auto;
+		}
+		ul::after {
+			display: block;
+			content: '';
+			clear: both;
+		}
+		img {
+			vertical-align: bottom;
+		}
+		.header {
+			display: flex;
+			flex-wrap: wrap;
+		}
+		.logo {
+			width: 70%;
+		}
+		.menu {
+			width: 30%;
+			margin: 25px 0;
+		}
+		ul {
+			padding: 0;
+			display: flex;
+			flex-wrap: wrap;
+			list-style-type: none;
+		}
+		ul li {
+			margin: 0 5px;
+		}
+		.slider {
+			height: 320px;
+			padding-top: 20px;
+			clear: left;
+		}
+		.newsletter {
+			display: flex;
+			margin: 10px auto;
+			padding: 20px 0;
+		}
+		.newsletter__header {
+			width: 749px;
+			font-size: 32px;
+		}
+		.newsletter__form {
+			width: 251px;
+			padding: 8px 0;
+		}
+		.contentwrap {
+			display: flex;
+			flex-wrap: wrap;
+		}
+		.content {
+			width: calc(33.333% - 40px);
+			padding: 0 20px;
+		}
+		.slider img,
+		.content img {
+			max-width: 100%;
+			height: auto;
+		}
+	</style>
+</head>
+<body>
+	<header class="header">
+		<div class="logo">
+			<img src="http://placehold.it/250x100" alt="Logo">
+		</div>
+		<nav class="menu">
+			<ul>
+				<li><a href="#">Home</a></li>
+				<li><a href="#">About us</a></li>
+				<li><a href="#">Blog</a></li>
+				<li><a href="#">Portfolio</a></li>
+				<li><a href="#">Services</a></li>
+			</ul>
+		</nav>
+		<div class="slider">
+			<img src="http://placehold.it/1000x320" alt="Slider">
+		</div>
+	</header>
+	<div class="newsletter">
+		<div class="newsletter__header">
+			Newsletter?
+		</div>
+		<form class="newsletter__form" action="landingpage.html" method="post">
+			<input type="email" name="email" value="" placeholder="E-Mail Adresse">
+			<input type="submit" name="anmelden" value="Anmelden">
+		</form>
+	</div>
+	<div class="contentwrap">
+		<div class="content content__links">
+				<img src="http://placehold.it/300x300" alt="Content Links">
+		</div>
+		<div class="content content__mitte">
+				<img src="http://placehold.it/300x300" alt="Content Mitte">
+		</div>
+		<div class="content content__rechts">
+				<img src="http://placehold.it/300x300" alt="Content Rechts">
+		</div>
+	</div>
+	<div class="socialmedia">
+		<ul>
+			<li><a href="#"><img src="H:\Uebungen\Uebung1\facebook_brand.png" width="29" height="29" alt=""></a></li>
+			<li><a href="#"><img src="H:\Uebungen\Uebung1\twitter_brand.png" width="29" height="29" alt=""></a></li>
+			<li><a href="#"><img src="H:\Uebungen\Uebung1\youtube_brand.png" width="29" height="29" alt=""></a></li>
+		</ul>
+	</div>
+</body>
+</html>
