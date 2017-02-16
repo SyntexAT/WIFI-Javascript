@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <script src="../functions.js"></script>
+	<script>
+
+
+    window.onload = function () {
+      _e('umwandeln__usd').onclick = convertToUSD;
+      _e('euro').value = '';
+    }
+
+    var convertToUSD = function(e) {
+      e.preventDefault;
+      // Variablen
+      var euroInput, usdKurs, usdOutput;
+
+      // Daten einlesen
+      euroInput = _e('euro').value;
+      euroInput = zahlEinlesen( euroInput );
+      usdKurs = 1.0638;
+
+      // Output
+      if ( isNaN(euroInput) ) {
+        _e('usd').innerHTML = 'Es wurde keine Zahl eingegeben';
+        _e('euro').className = 'error';
+      } else {
+        usdOutput = euroInput * usdKurs;
+        _e('usd').innerHTML = '$' + zahlAusgeben(usdOutput);
+        _e('euro').className = '';
+      }
+    };
+	</script>
+	<style>
+    .error {
+      border: 1px solid red;
+    }
+	</style>
+</head>
+<body>
+  <form action="#">
+    Euro: <input type="text" name="eur" id="euro" value="">
+    <button type="button" id="umwandeln__usd" name="button">> USD</button>
+    <span id="usd"></span>
+  </form>
+</body>
+</html>
