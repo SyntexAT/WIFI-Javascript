@@ -1,1 +1,0 @@
-alert('Externe JS-Datei!');
