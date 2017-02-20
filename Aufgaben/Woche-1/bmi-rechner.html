@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+<head>
+	<title>BMI Rechner</title>
+	<meta charset="utf-8">
+	<script src="../../functions.js"></script>
+	<script>
+		window.onload = function() {
+			// Input Felder reseten
+			_e('feldGroesse').value = '';
+			_e('feldGewicht').value = '';
+
+			_e('bmi-rechner').onsubmit = berechneBMI;
+		}
+
+		var berechneBMI = function(e){
+			e.preventDefault();
+
+			var groesse, groessePx, gewicht, gewichtPx, bmi, gewichtAbfrage, groessenAbfrage, fehlermeldung, kategorie;
+
+			fehlermeldung = '';
+			kategorie = '';
+
+			groesse = parseInt(_e('feldGroesse').value);
+			gewicht = parseInt(_e('feldGewicht').value);
+
+			if ( (isNaN(groesse) || !(groesse >= 160 && groesse <= 200)) || (isNaN(gewicht) || !(gewicht >= 40 && gewicht <= 120)) ) {
+				if (isNaN(groesse)) {
+					_e('feldGroesse').className = 'error';
+					fehlermeldung += '<b>Größe:</b> Es muss eine ganze Zahl eigegeben werden!<br>'
+				} else if (!(groesse >= 160 && groesse <= 200)) {
+					_e('feldGroesse').className = 'error';
+					fehlermeldung += '<b>Größe:</b> Die Zahl muss im angegebenen Zahlenbereich liegen!<br>';
+				} else {
+					_e('feldGroesse').className = '';
+				}
+				if (isNaN(gewicht)) {
+					_e('feldGewicht').className = 'error';
+					fehlermeldung += '<b>Gewicht:</b> Es muss eine ganze Zahl eigegeben werden!<br>';
+				} else if (!(gewicht >= 40 && gewicht <= 120)) {
+					_e('feldGewicht').className = 'error';
+					fehlermeldung += '<b>Gewicht:</b> Die Zahl muss im angegebenen Zahlenbereich liegen!<br>';
+				} else {
+					_e('feldGewicht').className = '';
+				}
+				_e('fehlermeldung').style.display = 'block';
+				_e('fehlermeldung').innerHTML = fehlermeldung;
+			} else {
+
+				// 1cm = 10px
+				// 1kg = 3px
+				// Um die Position X zu berechnen wird die eingegebene Größe MINUS der mindest Größe gerechnet
+				// und danach mal 10 pro px
+				// Um die Position Y zu berechnen wird das eingegebene Gewicht MINUS dem mindest Gewicht gerechnet
+				// und danach map 3 pro px
+				groessePx = (groesse - 160) * 10;
+				gewichtPx = (gewicht - 40) * 3;
+				_e('pointer').style.left = groessePx + 'px';
+				_e('pointer').style.bottom = gewichtPx + 'px';
+
+				// BMI berechnen
+				// Die Formel lautet Gewicht/(Größe*Größe)
+				bmi = (gewicht / ((groesse/100) * (groesse/100)));
+
+				if(bmi < 16){
+					kategorie = 'starkes Untergewicht';
+					_e('ausgabe').className = 'sUntergewicht';
+				} else if (bmi >= 16 && bmi < 17) {
+						kategorie = 'mäßiges Untergewicht';
+						_e('ausgabe').className = 'mUntergewicht';
+				} else if (bmi >= 17 && bmi < 18.5) {
+						kategorie = 'leichtes Untergewicht';
+						_e('ausgabe').className = 'lUntergewicht';
+				} else if (bmi >= 18.5 && bmi < 25) {
+						kategorie = 'Normalgewicht';
+						_e('ausgabe').className = 'normalgewicht';
+				} else if (bmi >= 25 && bmi < 30) {
+						kategorie = 'Präadipositas';
+						_e('ausgabe').className = 'praeadipositas';
+				} else if (bmi >= 30 && bmi < 35) {
+						kategorie = 'Adipositas Grad I';
+						_e('ausgabe').className = 'adipositas1';
+				} else if (bmi >= 35 && bmi < 40) {
+						kategorie = 'Adipositas Grad II';
+						_e('ausgabe').className = 'adipositas2';
+				} else {
+						kategorie = 'Adipositas Grad III';
+						_e('ausgabe').className = 'adipositas3';
+				}
+
+				_e('feldGroesse').className = '';
+				_e('feldGewicht').className = '';
+				_e('bmiAusgerechnet').innerHTML = zahlAusgeben(bmi);
+				_e('bmiKategorie').innerHTML = kategorie;
+				_e('fehlermeldung').style.display = 'none';
+				_e('bmi-graph').style.display = 'block';
+				_e('ausgabe').style.display = 'block';
+			}
+
+		}
+	</script>
+	<style>
+	.wrapper {
+		position: relative;
+		width: 480px;
+		margin: 0 auto;
+	}
+	#bmi-rechner {
+		margin-bottom: 20px;
+	}
+	#bmi-graph {
+		display: none;
+		position: relative;
+	}
+	#map {
+		position: absolute;
+		width: 412px;
+		height: 260px;
+		left: 53px;
+		top: 0;
+	}
+	#pointer {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+    font-size: 19px;
+    line-height: 19px;
+    font-family: "Comic Sans MS";
+    color: red;
+	}
+	#fehlermeldung {
+		display: none;
+		color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+		border-radius: 5px;
+		padding: 15px;
+		margin-bottom: 10px;
+	}
+	.error {
+		border: 2px solid red;
+	}
+	label {
+		display: inline-block;
+		width: 170px;
+	}
+	input[type="text"] {
+		width: 50px;
+		padding: 5px;
+		font-size: 16px;
+		margin-bottom: 10px;
+	}
+	#berechnen {
+		color: #fff;
+		background-color: #337ab7;
+		border: 1px solid #2e6da4;
+		padding: 5px 10px;
+		border-radius: 5px;
+	}
+	#ausgabe {
+		display: none;
+		position: absolute;
+		width: 160px;
+		top: 60px;
+		right: 10px;
+		text-align: center;
+		padding: 5px 10px;
+	}
+	#bmiAusgerechnet {
+		font-size: 24px;
+		font-weight: bold;
+	}
+	.sUntergewicht { background: #7C7CBC;	}
+	.mUntergewicht { background: #7C7CFC;	}
+	.lUntergewicht { background: #7CFCFC;	}
+	.normalgewicht { background: #7CFC7C; }
+	.praeadipositas {	background: #FCFC7C; }
+	.adipositas1 { background: #FCBB91; }
+	.adipositas2 { background: #FC9191; }
+	.adipositas3 { background: #C08080; }
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<h1>BMI Rechner</h1>
+		<form id="bmi-rechner">
+			<label for="groesse">Größe [160cm-200cm]: </label><input type="text" name="groesse" id="feldGroesse" value=""><br>
+			<label for="gewicht">Gewicht [40kg-120kg]: </label><input type="text" name="gewicht" id="feldGewicht" value=""><br>
+			<div id="fehlermeldung">
+			</div>
+			<div id="ausgabe">
+				BMI: <br>
+				<span id="bmiAusgerechnet"></span><br>
+				<span id="bmiKategorie"></span>
+			</div>
+			<button id="berechnen">BMI berechnen</button>
+		</form>
+		<div id="bmi-graph">
+			<img src="bmi_tabelle.gif" />
+			<div id="map">
+				<div id="pointer">
+					X
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

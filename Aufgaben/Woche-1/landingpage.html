@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script>
+	</script>
+	<style>
+  body {
+    margin: 0;
+  }
+  #wrapper {
+    width: 1600px;
+    margin: 0 auto;
+  }
+  header {
+    background: red;
+  }
+	#logo {
+		padding: 10px;
+	}
+  nav {
+    background: orange;
+  }
+  ul {
+    margin: 0;
+		padding: 10px;
+		display: flex;
+  }
+	ul li {
+		list-style-type: none;
+		margin-right: 10px;
+	}
+  #content {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  #content__links {
+    width: 33.33%;
+    background: lightblue;
+  }
+  #content__mitte {
+    width: 33.33%;
+    background: lightgreen;
+  }
+  #content__rechts {
+    width: 33.33%;
+    background: pink;
+  }
+  img {
+    vertical-align: bottom;
+    margin-bottom: 10px;
+  }
+  footer {
+    height: 30px;
+    background: yellow;
+  }
+  @media (max-width:1600px) {
+    #wrapper {
+      width: 100%;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+  @media (max-width:768px){
+    #content__links,
+    #content__mitte,
+    #content__rechts {
+      text-align: center;
+      min-height: 100px;
+      width: 100%;
+    }
+  }
+	</style>
+</head>
+<body>
+  <div id="wrapper">
+    <header>
+      <div id="logo">
+        <img src="http://placehold.it/250x100">
+      </div>
+    </header>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Über uns</a></li>
+        <li><a href="#">Projekt</a></li>
+        <li><a href="#">Kontakt</a></li>
+      <ul>
+    </nav>
+    <div id="content">
+      <div id="content__links">
+      </div>
+      <div id="content__mitte">
+      </div>
+      <div id="content__rechts">
+        <img src="http://placehold.it/520x110">
+        <img src="http://placehold.it/520x110">
+        <img src="http://placehold.it/520x110">
+      </div>
+    </div>
+    <footer>
+
+    </footer>
+  </div>
+</body>
+</html>
