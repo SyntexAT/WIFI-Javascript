@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <script src="../functions.js"></script>
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+	<script>
+  var aZahlen = [];
+
+  window.onload = function(){
+    hideEl('ausgabe');
+    document.forms[0].onsubmit = zahlSpeichern;
+
+    _e('tabs__eingabe').onclick = function(){
+      hideEl('ausgabe');
+      showEl('eingabe');
+      _e('tabs__eingabe').className = 'current';
+      _e('tabs__ausgabe').className = '';
+    }
+
+    _e('tabs__ausgabe').onclick = function(){
+      hideEl('eingabe');
+      showEl('ausgabe');
+      _e('tabs__eingabe').className = '';
+      _e('tabs__ausgabe').className = 'current';
+      zahlenTab();
+    }
+
+  }
+
+  var zahlSpeichern = function(e){
+    e.preventDefault();
+    var eingabe, userZahl;
+
+    eingabe = _e('zahl').value;
+    userZahl = zahlEinlesen( eingabe );
+
+    if ( isNaN(userZahl) || eingabe == "" ) {
+    showEl('hinzugefugt');
+      _e('hinzugefugt').className = "error";
+      _e('hinzugefugt').innerHTML = 'Es wurde keine Zahl eingegeben!';
+    } else {
+      aZahlen.push( userZahl );
+      showEl('hinzugefugt');
+      _e('hinzugefugt').className = "success";
+      _e('hinzugefugt').innerHTML = '<strong>' + userZahl + '</strong> wurde hinzugefügt!';
+    }
+
+    console.log(aZahlen);
+    _e('zahl').value = '';
+  }
+
+  var zahlenTab = function() {
+    // gib Zahlen aus Array in Tab "ausgabe" aus
+    var ausgabe, summe = 0, minZahl = aZahlen[0], maxZahl = aZahlen[0];
+
+    ausgabe = '<table><tr><th>Array Key</th><th>Array String</th><th>Key löschen</tr>';
+
+    for (var i = 0; i < aZahlen.length; i++) {
+      ausgabe += '<tr><td>' + i + '</td><td>' + aZahlen[i] + '</td><td><span onclick="loescheZahl(' + i + ')">X</span></td></tr>'
+      summe += aZahlen[i];
+
+      if (minZahl > aZahlen[i]) {
+        minZahl = aZahlen[i];
+      }
+      if (maxZahl < aZahlen[i]) {
+        maxZahl = aZahlen[i];
+      }
+    }
+
+    ausgabe += '</table><br> ';
+    ausgabe += 'Die Summe aller Zahlen beträgt: ' + summe + '<br>';
+    ausgabe += 'Die kleinste Zahl ist: ' + minZahl + '<br>';
+    ausgabe += 'Die größte Zahl ist: ' + maxZahl + '<br>';
+
+    _e('ausgabe').innerHTML = ausgabe;
+  }
+
+  var loescheZahl = function(id){
+    console.log( 'Zahl ' + aZahlen[id] + ' wurde gelöscht');
+    aZahlen.splice(id, 1);
+
+    zahlenTab();
+  }
+
+	</script>
+	<style>
+  #wrapper {
+    width: 480px;
+    margin: 0 auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  ul#tabs {
+    display: flex;
+    padding: 0;
+  }
+  ul#tabs li {
+    list-style-type: none;
+    margin-right: 5px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+  ul#tabs li.current {
+    background: #f1f1f1;
+  }
+  input[type="text"] {
+    padding: 5px;
+    margin-right: 5px;
+  }
+  button {
+    border: 1px solid #ccc;
+    background: #f1f1f1;
+    padding: 5px 10px;
+  }
+  #hinzugefugt {
+    display: none;
+    margin-top: 5px;
+    padding: 5px;
+  }
+  table {
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+    width: 100%;
+  }
+  table td, table th {
+    width: 33%;
+    text-align: center;
+    border: 1px solid #ccc;
+  }
+	</style>
+</head>
+<body>
+  <div id="wrapper">
+    <h3>Zahlen in Array speichern</h3>
+    <ul id="tabs">
+      <li id="tabs__eingabe" class="current">Eingabe</li>
+      <li id="tabs__ausgabe">Ausgabe</li>
+    </ul>
+    <div id="eingabe">
+      <form id="eingabe-form">
+        <label for="zahl">Zahl:</label>
+        <input type="text" name="zahl" id="zahl">
+        <button>SAVE</button>
+      </form>
+      <div id="hinzugefugt"></div>
+    </div>
+    <div id="ausgabe">
+
+    </div>
+  </div>
+</body>
+</html>

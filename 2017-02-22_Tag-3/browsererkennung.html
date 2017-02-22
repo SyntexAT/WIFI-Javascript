@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<script>
+    console.log(navigator.userAgent); // Ermittle userAgent vom Browser (navigator)
+    var s= 'Wifi Wien';
+
+    if( navigator.userAgent.indexOf('Firefox') > -1){ alert('Guter Browser');}
+
+    var isFF = navigator.userAgent.toLowerCase().indexOf('firefox') > -1; // Useragent wird abgefragt und in lowerCase umgewandelt.
+    var isAndroid = navigator.userAgent.toLowerCase().indexOf('android') > -1; // damit Fehlerquote verringert wird.
+    var isIPhone = navigator.userAgent.toLowerCase().indexOf('iphone') > -1;
+
+    if(isIPhone && isFF) {alert ('Wie geht das?');}
+
+	</script>
+	<style>
+	</style>
+</head>
+<body>
+</body>
+</html>

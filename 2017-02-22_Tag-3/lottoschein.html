@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../functions.js"></script>
+	<script>
+    var aLotto = [];
+    window.onload = function() {
+      generateTable3();
+    }
+    var generateTable = function() {
+      var table, zahl;
+
+      zahl = 0;
+      table = '<table>';
+
+      for (var i = 1; i <= 8 ; i++) {
+        table += '<tr>';
+        for (var j = 1; j <= 6 ; j++) {
+          zahl++;
+          if (zahl <= 45) {
+            table += '<td id="zahl-' + zahl + '"><span onclick="zahlAuswaehlen(' + zahl + ')">' + zahl + '</span></td>';
+          } else {
+            table += '<td>&nbsp;</td>';
+          }
+        }
+        table += '</tr>';
+      }
+
+      table += '</table>';
+
+      _e('lottoschein').innerHTML = table;
+    }
+    var zahlAuswaehlen = function(zahl){
+      _e('zahl-' + zahl).innerHTML = '<span class="ausgewaehlt" onclick="zahlAbwaehlen(' + zahl + ')">' + zahl + '</span>';
+      alert(zahl);
+    }
+    var zahlAbwaehlen = function(zahl){
+      _e('zahl-' + zahl).innerHTML = '<span onclick="zahlAuswaehlen(' + zahl + ')">' + zahl + '</span>';
+      alert(zahl);
+    }
+
+    var generateTable2 = function(){
+      var ausgabe = '';
+
+      ausgabe += '<table>';
+
+      for (var i = 1; i <= 45; i++) {
+        if( i%6 == 1) {
+          ausgabe += '<tr>'; // 1,7,13,19,...
+        }
+        ausgabe += '<td>' + i + '</td>';
+        if( i%6 == 0) {
+          ausgabe += '<tr>'; // 1,7,13,19,...
+        }
+      }
+
+      ausgabe += '</table>';
+      _e('lottoschein').innerHTML = table;
+    }
+
+    var generateTable3 = function() {
+      var oTable, oTr, oTd, oButton;
+      oTable = document.createElement('table');
+      oTable.geklickt = 0;
+
+      for (var i = 1; i <= 45; i++) {
+        if( i%6 == 1){
+            oTr = document.createElement('tr');
+            oTable.appendChild(oTr);
+        }
+        oTd = document.createElement('td');
+
+        oTd.innerHTML = i;
+        //oTd.setAttribute('data-i', i); // HTML Attribute - Ist immer Sting
+        oTd.i = i; // Javascript Attribute - ist immer der Wert den man ihn zuweist
+        oTd.onclick = function() {
+          //VERSION 1
+          //if( aLotto.length > 5 ){ return; } - VERSION 1
+          //if( this.className == 'selected' ){ return; } - VERSION 1
+          //console.log(this.getAttribute('data-i'));
+          //console.log(this.i);
+          //window.aLotto.push(this.i);
+
+          //VERSION 2
+    			if ( aLotto[this.i] ) {
+    				delete aLotto[this.i];
+    				this.className = '';
+    				oTable.geklickt--;
+    				return;
+    			}
+          if( oTable.geklickt == 6) {
+            oButton.removeAttribute = 'disabled';
+          }
+          if ( oTable.geklickt > 5 ) {
+
+    				return;
+    			}
+    			oTable.geklickt++;
+    			//var oTD = this;
+    			this.className = 'selected';
+    			//alert( this.getAttribute( 'data-i' ) ); // ???
+    			//window.aLotto.push( this.i );
+
+
+    			aLotto[ this.i ] = true;
+
+    			console.log( window.aLotto )
+        }
+        oTr.appendChild(oTd);
+      }
+
+      _e('lottoschein').appendChild(oTable);
+      oButton = document.createElement('button');
+      oButton.innerHTML = 'Los geht\'s';
+      oButton.onclick = function(){
+        if (oTable.geklickt < 6) { return; }
+
+        var aSpiel = [];
+        for (var i = 1; i <= 6 ; i++) {
+          aSpiel.push(zufallsZahlGenerator(1,45));
+        }
+
+        console.log(aSpiel);
+
+      }
+      _e('lottoschein').appendChild(oButton);
+    }
+
+	</script>
+	<style>
+  table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+  }
+  table td {
+    border: 1px solid #ccc;
+    padding: 5px;
+    text-align: center;
+    width: 30px;
+    height: 30px;
+  }
+  .ausgewaehlt {
+    border: 1px solid red;
+    border-radius: 15px;
+    padding: 5px;
+  }
+  .selected {
+    background: #f2dede;
+  }
+  span {
+    cursor: pointer;
+    width: 18px;
+    display: inline-block;
+  }
+	</style>
+</head>
+<body>
+  <h3>Lottoschein</h3>
+  <div id="lottoschein">
+
+  </div>
+</body>
+</html>

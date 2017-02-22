@@ -37,3 +37,17 @@ var zufallsZahlGenerator = function(min, max) {
 
   return zufall;
 }
+
+/**************************
+  HTML Element mit id wird eingeblendet
+**************************/
+var showEl = function(id){
+  _e(id).style.display = "block";
+}
+
+/**************************
+  HTML Element mit id wird ausgeblendet
+**************************/
+var hideEl = function(id){
+  _e(id).style.display = "none";
+}
