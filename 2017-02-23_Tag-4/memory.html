@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../functions.js"></script>
+  <script src="../jquery-3.1.1.min.js"></script>
+	<script>
+    var karte1 = '', karte2 = '';
+    $(document).ready(function(){
+
+      // Spielfeld generieren
+      for (var i = 1; i <= 6; i++) {
+        oKarte = document.createElement('div');
+        oKarte.className = i;
+        _e('memory').appendChild(oKarte);
+        oInnerKarte = document.createElement('div');
+        oInnerKarte.innerHTML = i;
+        oKarte.appendChild(oInnerKarte)
+        oKarte2 = document.createElement('div');
+        oKarte2.className = i;
+        _e('memory').appendChild(oKarte2);
+        oInnerKarte2 = document.createElement('div');
+        oInnerKarte2.innerHTML = i;
+        oKarte2.appendChild(oInnerKarte2);
+
+      }
+
+      $('#start').click(function(){
+        $('#memory').css('display','flex');
+        $(this).css('display','none');
+        $('#neustarten').css('display','inline-block');
+      });
+
+      $('#memory > div').click(function(){
+        if(karte1 == ''){
+          karte1 = $(this).attr('class');
+          $(this).addClass('open');
+        } else if (karte2 == '') {
+          karte2 = $(this).attr('class');
+          $(this).addClass('open');
+        } else {
+          if (karte1 == karte2) {
+            $('.open').addClass('geloest').removeClass('open');
+            karte1 = '';
+            karte2 = '';
+          } else {
+            $('.open').removeClass('open');
+            karte1 = '';
+            karte2 = '';
+          }
+        }
+      })
+
+    });
+
+
+	</script>
+	<style>
+  #memory {
+    display: none;
+    width: 680px;
+    flex-wrap: wrap;
+  }
+  #memory > div {
+    width: 150px;
+    height: 150px;
+    background: red;
+    margin: 10px;
+  }
+  #memory div.open div {
+    display: block;
+  }
+  #neustarten {
+    display: none;
+  }
+	</style>
+</head>
+<body>
+  <button id="start">Spiel starten</button>
+  <div id="memory">
+  </div>
+  <button id="neustarten">Spiel neustarten</button>
+</body>
+</html>

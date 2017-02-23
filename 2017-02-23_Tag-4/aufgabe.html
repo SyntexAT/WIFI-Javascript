@@ -1,0 +1,223 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../functions.js"></script>
+	<script>
+
+    // localStorage.removeItem();
+    // localStorage.clear();
+    personen = JSON.parse( localStorage.getItem('personen') ) || [];
+    console.log(personen);
+
+    window.onload = function(){
+
+      var oOption, aMonate;
+
+      _e('radio-frau').checked = false;
+      _e('radio-mann').checked = false;
+      hideEl('ausgabe');
+
+
+      _e('tabs__eingabe').onclick = function(){
+        hideEl('ausgabe');
+        showEl('eingabe');
+        _e('tabs__eingabe').className = 'current';
+        _e('tabs__ausgabe').className = '';
+      }
+
+      _e('tabs__ausgabe').onclick = function(){
+        hideEl('eingabe');
+        showEl('ausgabe');
+        _e('tabs__eingabe').className = '';
+        _e('tabs__ausgabe').className = 'current';
+        ausgabeTab();
+      }
+
+      _e('loeschen').onclick = function(){
+        localStorage.clear();
+        ausgabeTab();
+      }
+
+      // Erzeuge Optionen für Selectbox - Tage (1-31)
+      for (var i = 1; i <= 31 ; i++) {
+        oOption = document.createElement('option');
+        oOption.value = i;
+        oOption.innerHTML = i;
+        _e('geb-tag').appendChild(oOption);
+      }
+
+      // Erzeuge Optionen für Selectbox - Monat (Jänner - Dezember)
+      // Monate werden zuerst ins Array geschrieben und dann über eine Array abfrage ausgespielt
+      aMonate = ['Jänner', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+      for (var i = 0; i <= 11 ; i++) {
+        oOption = document.createElement('option');
+        oOption.value = i+1;
+        oOption.innerHTML = aMonate[i];
+        _e('geb-monat').appendChild(oOption);
+      }
+
+      // Erzeuge Optionen für Selectbox - Jahr (2017 - 1900)
+      for (var i = 2017; i >= 1900 ; i--) {
+        oOption = document.createElement('option');
+        oOption.value = i;
+        oOption.innerHTML = i;
+        _e('geb-jahr').appendChild(oOption);
+      }
+
+      _e('formEingabe').onsubmit = function(e){
+        e.preventDefault();
+        var tag, monat, jahr, geschlecht, hinweis = '', storageCounter;
+
+        tag = _e('geb-tag').value * 1;
+        monat = _e('geb-monat').options[ _e('geb-monat').selectedIndex ].value * 1;
+        jahr = _e('geb-jahr').value * 1;
+        console.log('Geburtstag: ' + tag + '.' + monat + '.' + jahr);
+
+        if (_e('radio-frau').checked) {
+          geschlecht = _e('radio-frau').value;
+        }
+        if (_e('radio-mann').checked) {
+          geschlecht = _e('radio-mann').value;
+        }
+        console.log('Geschlecht: ' + geschlecht);
+
+        // Fehlerabfrage
+        // andere Abfrage möglichkeiten
+        // isNaN(tag*monat*jahr) || tag*monat*jahr == 0 || geschlecht == '';
+        if( isNaN(tag) || isNaN(monat) || isNaN(jahr) || (_e('radio-mann').checked == false && _e('radio-frau').checked == false)){
+          if (isNaN(tag)) {
+            hinweis += "<b>Tag:</b> Es wurde kein Tag ausgewählt<br>";
+            _e('geb-tag').className = 'error';
+          } else { _e('geb-tag').className = ''; }
+          if (isNaN(monat)) {
+            hinweis += "<b>Monat:</b> Es wurde kein Monat ausgewählt<br>";
+            _e('geb-monat').className = 'error';
+          } else { _e('geb-monat').className = ''; }
+          if (isNaN(jahr)) {
+            hinweis += "<b>Jahr:</b> Es wurde kein Jahr ausgewählt<br>";
+            _e('geb-jahr').className = 'error';
+          } else { _e('geb-jahr').className = ''; }
+          if (_e('radio-mann').checked == false && _e('radio-frau').checked == false) {
+            hinweis += '<b>Geschlecht:</b> Es wurde kein Geschlecht ausgewählt!';
+          }
+          _e('hinweis').className = 'error';
+          _e('hinweis').innerHTML = hinweis;
+          return;
+        } else {
+          // Abfrage ob das Datum vorhanden ist. zB. (31.2.2017)
+          var date = new Date( jahr, monat-1, tag);
+          if( tag != date.getDate() ){
+            hinweis = '<b>Datum:</b> Das Datum ist nicht möglich!'
+            _e('geb-tag').className = 'error';
+            _e('geb-monat').className = 'error';
+            _e('geb-jahr').className = 'error';
+            _e('hinweis').className = 'error';
+            _e('hinweis').innerHTML = hinweis;
+          } else {
+            jahrGeb = Date.UTC(jahr, monat-1, tag);
+            dateNow = new Date();
+            jahrNow = dateNow.getFullYear();
+            console.log('jahrGeb:' + jahrGeb);
+            alterJetzt = jahrNow-jahrGeb;
+            var person = {
+              gebDatum: date,
+              gebDatumString: tag + '. ' + aMonate[monat-1] + ' ' + jahr,
+              gebDatumArray: [tag, monat, jahr],
+              geschlecht: geschlecht,
+              alter: alterJetzt
+            }
+            personen.push(person);
+/*
+            _e('geb-tag').options[0].selected = true;
+            _e('monat').value = ""; // NUR WENN VALUE VORHANDEN IST!
+            _e('jahr').selectedIndes = 0;
+            _e('radio-frau').checked = false;
+            _e('radio-mann').checked = false;
+
+            Daten können auch per Methode reseted werden!
+            Mittels this.reset();
+*/
+            this.reset();
+
+            localStorage.setItem('personen', JSON.stringify(personen));
+
+            _e('geb-tag').className = '';
+            _e('geb-monat').className = '';
+            _e('geb-jahr').className = '';
+            _e('hinweis').className = 'success';
+            _e('hinweis').innerHTML = 'Ihre Daten wurden gespeichert!';
+          }
+        }
+    }
+  }
+
+  var ausgabeTab = function(){
+    var oTable, oTR, oTD;
+    _e('innerAusgabe').innerHTML = '<table id="meineTabelle"><tr><th>Geb.Datum</th><th>Alter</th><th>Geschlecht</th></tr></table>';
+    oTable = _e('meineTabelle');
+
+    for (i in personen) {
+      oTR = document.createElement('tr');
+      oTable.appendChild(oTR);
+      oTD = document.createElement('td');
+      oTD.innerHTML = personen[i].gebDatumString;
+      oTR.appendChild(oTD);
+      oTD = document.createElement('td');
+      oTD.innerHTML = personen[i].alter;
+      oTR.appendChild(oTD);
+      oTD = document.createElement('td');
+      oTD.innerHTML = personen[i].geschlecht;
+      oTR.appendChild(oTD);
+    }
+  }
+
+	</script>
+	<style>
+
+  ul#tabs {
+    display: flex;
+    padding: 0;
+  }
+
+  ul#tabs li {
+    list-style-type: none;
+    margin-right: 5px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+
+  ul#tabs li.current {
+    background: #f1f1f1;
+  }
+
+	</style>
+</head>
+<body>
+<ul id="tabs">
+  <li id="tabs__eingabe" class="current">Eingabe</li>
+  <li id="tabs__ausgabe">Ausgabe</li>
+</ul>
+  <div id="eingabe">
+    <form id="formEingabe">
+      Geburtsdatum:
+      <select id="geb-tag"><option>Tag</option></select>
+      <select id="geb-monat"><option>Monat</option></select>
+      <select id="geb-jahr"><option>Jahr</option></select>
+      <br>
+      Geschlecht:
+      <input type="radio" name="geschlecht" id="radio-frau" value="w"><label id="label-frau" for="radio-frau">Frau</label>
+      <input type="radio" name="geschlecht" id="radio-mann" value="m"><label id="label-mann" for="radio-mann">Mann</label><br>
+      <div id="hinweis"></div>
+      <button type="submit" id="form-button" class="btn">Speichern</button>
+    </form>
+  </div>
+  <div id="ausgabe">
+    <div id="innerAusgabe"></div>
+    <button class="btn" id="loeschen">alles löschen</button>
+  </div>
+</body>
+</html>

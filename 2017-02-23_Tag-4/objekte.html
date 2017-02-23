@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../functions.js"></script>
+	<script>
+
+  var a = new Array();
+  var a2 = [];
+  var a3 = a; // Ist nur ein Zeiger auf das schon erstellte Array!
+              // Es wird kein neues Array angelegt!!!
+
+  a[0] = 'a'; // Es wird ins Array a eingefügt
+  a2[1] = 'b'; // Es wird ins Array a2 eingefügt
+  a3[2] = 'c'; // Es wird ins Array a eingefügt
+
+  console.log(a , a2, a3);
+
+  window.onload = function(){
+    var div = document.getElementById('x'); // Zeiger auf document
+    div.innerHTML = 'B'; // Es wird über den Zeiger ein HTML Element manipuliert
+    var div2 = div; // div2 ist ein Zeiger auf div der auf document zeigt
+
+    f = document.getElementById('formID');
+    f = document.forms[0]; // Assoziatives Array
+    f = document.forms['meinFormular'] // Ist auch bei den Formularen möglich
+    f = document.forms.meinFormular; // Kann auch mittels . angesprochen werden
+    f = document.meinFormular; // Funktioniert auch!
+
+  }
+
+  var o = new Object(); // Es wird ein neues Object erstellt
+  var o2 = {}; // Object Literal - Kurzform fürs Object erstellen
+
+  o2.x = 3; // Attribut für das neue Object angelegt und den Wert 3 hinzugefügt
+  // var o2 = {y:1} -- Kann auch gleich bei der Definition vom Object angelegt werden
+  // var o2 = {y:1,z:'abc'} - Können auch mehrere Attribute erstellt werden - Datentyp ist egal! Auch Mehrzeilig!
+
+  // DICTIONARY - ASSOZIATIVES Array
+   a4 = [];
+   a4['x'] = 3;
+   a4['y'] = 1;
+   a4['z'] = 'abc';
+
+  console.log(o, o2);
+
+  // Object === Assoziatives Array && Assoziatives Array === Object
+  console.log(o.x, a4['x'], o['x'], a4.x);
+
+  var eigenschaft = 'x';
+  console.log(o.eigenschaft, o[eigenschaft]); // o.eigenschaft funktioniert NICHT, weil es nicht IM Object definiert wurde.
+
+  var o3 = [];
+  o3.x = 3;
+  o3.y = 1;
+
+  var o4 = {
+    a:[], // In einem Object können Arrays definiert werden
+    o:{   // Sub Objecte können auch definiert werden
+      sub1:1
+    }
+  }
+
+  // JSON -  Javascript Object Notation
+  // Vorteil - komprimieren - Daten so klein wie möglich zu machen und zu verschicken - Nicht wie bei XML
+  // Kann keine Methoden speichern und zu übertragen - NUR FÜR DATEN!
+  var objectString = JSON.stringify( o4 ); // Object wird für JSON in einen String umgewandelt
+  console.log( objectString );
+  var o5 = JSON.parse('{"abc":1,"xyz":[1,2,3]}' ); // JSON String wird wieder in ein Object umgewandelt
+  console.log( o5 );
+
+
+	</script>
+	<style>
+	</style>
+</head>
+<body>
+  <div id="x">
+    A
+  </div>
+  <form name="meinFormular" id="formID"></form>
+</body>
+</html>
