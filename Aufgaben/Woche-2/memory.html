@@ -68,7 +68,7 @@
 					generierteKarte.appendTo('#memory');
 					var kartenDivs = $("#memory").children();
 					while (kartenDivs.length) {
-					  $("#memory").append(kartenDivs.splice(Math.floor(Math.random() * kartenDivs.length), 1)[0]);
+					  $("#memory").append(kartenDivs.splice(Math.floor(Math.random() * kartenDivs.length), 1));
 					}
 				}
 			}

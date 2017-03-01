@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+
+		$(document).ready( function(){
+
+			// Transparente jQuery Methoden
+			// => liefert das gleiche jQuery Objekt zurück!
+			var btn1 = $('#test');
+			var btn1_nochmal = $('#test').html('neuer Text');
+
+			// destruktive jQuery Methoden
+			// => liefert ein jQuery Objekt von anderen Elementen zurück
+			var btn1_next $('#test').next('p');
+
+			// terminierende jQuery Methoden
+			// => liefert irgendetwas zurück, was kein jQuery Objekt ist! (String, Int, HTMLNodeElement)
+			$('#test').get[0]; // HTMLNodeElement
+			$('#text').on( 'click', function() { } );
+			var x = function(a) {
+				return 'Rückgabewert';
+			}
+		});
+
+
+	</script>
+	<style>
+
+	</style>
+</head>
+<body>
+	<button id="test">Test Button</button>
+	<p>das ist ein test paragraph</p>
+</body>
+</html>

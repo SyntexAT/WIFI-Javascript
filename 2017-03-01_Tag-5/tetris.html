@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+    var debug = 1;
+    var aSteine = [], letzteReihe, aktuellerStein, countRows = 14, countCols = 9, counter = 1, col = 5, I;
+    var rowCount = -1;
+
+    var stein_L = [
+      [1,0,0],
+      [1,0,0],
+      [1,1,0],
+    ];
+
+    var spielfeldGenerieren = function(){
+        var table, tr;
+        table = $('<table>').appendTo('#tetris');
+        for( var row = 1; row <= countRows; row++){
+            tr = $('<tr>').appendTo(table);
+            for( var col = 1; col <= countCols; col++){
+              $('<td>').appendTo(tr);
+            }
+        }
+    }
+
+    var steinBewegen = function(){
+      /*
+        if(countRows < counter || $('tr:nth-child(' + counter + ') td:nth-child(' + col + ')').hasClass('bot-s1')){
+          counter = 1;
+          $('.s1').removeClass('s1').addClass('bot-s1');
+        } else {
+          $('.s1').removeClass('s1');
+          $('tr:nth-child(' + counter + ') td:nth-child(' + col + ')').addClass('s1');
+          counter++;
+        }
+        */
+      for (var i = 0; i < stein_L.length; i++) {
+        for (var j = 0; j < stein_L[i].length; j++) {
+          if (stein_L[i][j] == 1) {
+            $('tr:nth-child(' + (counter+i) + ') td:nth-child(' + (col+j) + ')').addClass('s1');
+          }
+        }
+      }
+      counter++;
+      if(counter > countRows || $().length > 0){
+        counter = 1;
+        $('.s1').removeClass('s1').addClass('bot-s1');
+      } else {
+        $('.s1').removeClass('s1');
+      }
+    }
+
+    $(document).ready(function(){
+      if(debug == 1){
+        spielfeldGenerieren();
+        $('#spielstarten').hide();
+      } else {
+        $('#spielstarten').on('click', function(e){
+          e.preventDefault();
+          spielfeldGenerieren();
+          $('#spielstarten').hide();
+        });
+      }
+      steinBewegen();
+      //I = setInterval( steinBewegen, 300 );
+
+      $( document ).on( 'keydown', function(e) {
+    			var key = e.originalEvent.keyCode;
+    			// 37 -> links
+    			// 39 -> rechts
+    			if ( key == 37 && col > 1 && !$('.s1').prev().hasClass('bot-s1') ) { col--; counter--; }
+    			if ( key == 39 && col < 9 && !$('.s1').next().hasClass('bot-s1') ) { col++; counter--; }
+    			steinBewegen();
+    	});
+    });
+	</script>
+	<style>
+  table {
+    width: 320px;
+  }
+  td {
+    height: 28px;
+  }
+  .s1 {
+    background: orange;
+  }
+  .bot-s1 {
+    background: red;
+  }
+	</style>
+</head>
+<body>
+  <div id="tetris"><button id="spielstarten" class="btn">Spiel starten</button></div>
+</body>
+</html>

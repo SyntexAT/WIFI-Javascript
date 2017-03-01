@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<script
+			  src="https://code.jquery.com/jquery-3.1.1.min.js"
+			  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+			  crossorigin="anonymous"></script>
+	<script>
+var countRows = 10, countCols = 7;
+var createTable = function() {
+	var cols, rows, table, tr;
+	table = $('<table>').appendTo( '#game' );
+	for ( rows=1; rows<=countRows; rows++ ) {
+			tr = $( '<tr>' ).appendTo( table );
+			for ( cols=1; cols<=countCols; cols++ ) {
+				$( '<td>' ).appendTo( tr );
+			}
+	}
+}
+var random = function(i,j) { return Math.floor( Math.random() * (j-i+1) ) + i; }
+var rowCount = 1, col = 4;
+var play = function() {
+
+	if ( rowCount > countRows ||  $( 'tr:nth-child('+rowCount+') td:nth-child('+col+')' ).hasClass( 's' ) ) {
+		$( '.g' ).removeClass( 'g' ).addClass( 's' );
+		rowCount = 1;
+		col = random(1,7);
+	} else {
+		$( '.g' ).removeClass( 'g' );
+	}
+	$( 'tr:nth-child('+rowCount+') td:nth-child('+col+')' ).addClass( 'g' );
+
+
+	rowCount++;
+}
+var I;
+$( document ).ready( function() {
+	createTable();
+	I = setInterval( play, 500 );
+
+	$( document ).on( 'keypress', function(e) {
+			var key = e.originalEvent.keyCode;
+			// 37 -> links
+			// 39 -> rechts
+			if ( key == 37 && col > 1 && !$('.g').prev().hasClass('s') ) { col--; rowCount--; }
+			if ( key == 39 && col < 7 && !$('.g').next().hasClass('s') ) { col++; rowCount--; }
+			play();
+	});
+
+});
+
+
+	</script>
+	<style>
+	td { border:1px solid #000; width:30px; height:30px; }
+	.g { background:#ccc; }
+	.s { background:#000; }
+	</style>
+</head>
+<body>
+	<div id="game"></div>
+</body>
+</html>
