@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../../meyerreset.css">
+  <link rel="stylesheet" type="text/css" href="../../krieger.css">
+  <script src="../../jquery-3.1.1.min.js"></script>
+  <script src="../../functions.js"></script>
+	<script>
+    $(document).ready(function(){
+	  	var aTabs = [];
+			// aTabs befüllen
+			aTabs = ['eins','zwei','drei'];
+
+      for (var i in aTabs) {
+        createTab(aTabs[i]);
+      }
+			$('#tab-' + aTabs[0] + ', #content-' + aTabs[0] ).addClass('current');
+    });
+
+    var createTab = function( id ){
+      var tab, content;
+
+      content = '<h2>' + id + '</h2>';
+
+      tab = $('<li>', {
+        html: id,
+        id: 'tab-' + id,
+				click: function(e){
+					e.preventDefault();
+					switchTab(id);
+				},
+      }).appendTo('#tabs');
+
+      content = $('<div>',{
+        html: content,
+        id: 'content-' + id
+      }).appendTo('#tabs__elemente');
+    }
+
+    var switchTab = function(id) {
+			$('.current').removeClass('current');
+			$('#tab-'+id).addClass('current');
+			$('#content-'+id).addClass('current');
+    }
+	</script>
+	<style>
+		#wrapper {
+			width: 680px;
+			margin: 0 auto;
+		}
+		#tabs__elemente {
+			position: relative;
+			top: -1px;
+		}
+	  ul#tabs {
+	    display: flex;
+			position: relative;
+	    padding: 0;
+			margin: 10px 0 0;
+			z-index: 10;
+	  }
+	  ul#tabs li {
+	    list-style-type: none;
+	    margin-right: 10px;
+	    padding: 5px 10px;
+	    border: 1px solid #ccc;
+	    cursor: pointer;
+	  }
+	  ul#tabs li.current {
+	    background: #f1f1f1;
+			border-bottom: 1px solid #f1f1f1;
+
+	  }
+		#tabs__elemente > div {
+			display: none;
+	    padding: 10px;
+	    border: 1px solid #ccc;
+	    background: #f1f1f1;
+		}
+		#tabs__elemente > .current {
+			display: block;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrapper">
+	  <ul id="tabs"></ul>
+	  <div id="tabs__elemente"></div>
+	</div>
+</body>
+</html>

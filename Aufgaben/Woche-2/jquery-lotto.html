@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../../krieger.css">
+  <script src="../../jquery-3.1.1.min.js"></script>
+  <script src="../../functions.js"></script>
+	<script>
+
+    $(document).ready(function(){
+      createTable();
+    });
+
+    var createTable = function(){
+      var oTable, oTR, oTD, cSelected = 0, oButtonStart, oButtonNeuStart, aLotto = [], euro = 0, hinweis;
+      oTable = $('<table>', { id: 'lotto-table'	}).appendTo('#content');
+			for (var i = 1; i <= 45; i++) {
+				if( i % 6 == 1){
+					oTR = $('<tr>').appendTo(oTable);
+				}
+				oTD = $('<td>',{
+					html: '<b>' + i + '</b>',
+					attr: {
+						'data-i': i
+					},
+					click: function(){
+						var dataI;
+						dataI = $(this).attr('data-i');
+
+						if ( aLotto[ dataI ] ) {
+							delete aLotto[ dataI ];
+							$(this).removeClass('selected');
+							cSelected--;
+							return;
+						}
+
+						if( cSelected > 5 ){
+							return;
+						}
+
+						cSelected++;
+						$(this).addClass('selected');
+						aLotto[ dataI ] = true;
+					},
+				}).appendTo(oTR);
+			}
+			oHinweis = $('<div>').addClass('hinweis').appendTo('#content')
+			oButtonStart = $('<button>', {
+				html: 'Ziehung starten!',
+				addClass: 'btn spielen',
+				click: function(e) {
+					e.preventDefault();
+					var getroffen;
+					$('.gezogen').removeClass('gezogen');
+					if( cSelected < 6){
+						hinweis = 'Es müssen 6 Zahlen ausgweählt werden!';
+						$('.hinweis').removeClass('success').addClass('error').html(hinweis);
+						return;
+					}
+					var aSpiel = [], zufallsZahl;
+					for (var i = 1; i <= 6; i++) {
+						zufallsZahl = zufallsZahlGenerator(1,45);
+						if ( aSpiel[ zufallsZahl ]) {
+							zufallsZahl = zufallsZahlGenerator(1,45);
+							aSpiel[zufallsZahl] = true;
+						} else {
+							aSpiel[zufallsZahl] = true;
+						}
+						$('td[data-i="' + zufallsZahl + '"]').addClass('gezogen');
+					}
+					getroffen = $('.selected.gezogen').length;
+					euro += 1.20;
+					hinweis = 'Du hast <b>' + getroffen + '</b> Zahlen getroffen.<br>';
+					hinweis += 'Deine Ausgaben sind: <b>' + zahlAusgeben(euro) + '€</b>';
+					$('.hinweis').removeClass('error').addClass('success').html(hinweis);
+				}
+			}).appendTo('#content');
+
+			oButtonNeuStart = $('<button>', {
+				html: 'Lottoschein neu ausfüllen',
+				addClass: 'btn neustart',
+				click: function(e){
+					e.preventDefault();
+					$('#content').html('<h3>Lotto</h3><p>Wähle 6 Zahlen aus 45 aus und drücke danach "Ziehung starten".<br>Viel Erfolg!</p>');
+					createTable();
+				}
+			}).appendTo('#content');
+    }
+	</script>
+	<style>
+	#content {
+		width: 640px;
+	}
+  table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+		margin-bottom: 20px;
+  }
+  table td {
+    border: 1px solid #ccc;
+    padding: 5px;
+    text-align: center;
+    width: 30px;
+    height: 30px;
+  }
+  .selected {
+    background-color: #f2dede;
+  }
+	.gezogen {
+  	background-color: #dff0d8;
+	}
+	.hinweis {
+		margin-bottom: 10px;
+	}
+	.btn {
+		margin-right: 10px;
+	}
+	</style>
+</head>
+<body>
+  <div id="content">
+		<h3>Lotto</h3>
+		<p>Wähle 6 Zahlen aus 45 aus und drücke danach "Ziehung starten".<br>
+			Viel Erfolg!</p>
+  </div>
+</body>
+</html>

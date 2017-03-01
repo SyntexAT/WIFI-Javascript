@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../../krieger.css">
+  <script src="../../jquery-3.1.1.min.js"></script>
+  <script src="../../functions.js"></script>
+	<script>
+    var aKarten = [
+      [0,0],
+      [1,1],
+      [2,2],
+      [3,3],
+      [4,4],
+      [5,5]
+    ], auswahl1 = '', auswahl2 = '';
+    $(document).ready(function(){
+
+      $('#starten').click(function(){
+        $('#memory').css('display','flex');
+        $(this).css('display','none');
+        $('#neustarten').css('display','inline-block');
+        spielGenerieren();
+      });
+
+      $('#neustarten').click(function(){
+        spielGenerieren();
+      });
+
+    });
+
+    var spielGenerieren = function() {
+			$('#memory').html('');
+			$('#memory').removeClass('win');
+			for (var i = 0; i < aKarten.length; i++) {
+				for (var j = 0; j < 2; j++) {
+					var generierteKarte, kartenId, richtigeKarten;
+					kartenId = i+1;
+					generierteKarte = $('<div>',{
+						addClass: 'paar-' + kartenId,
+						html: '<div>' + kartenId + '</div>',
+						click: function(){
+							if(auswahl1 == '' && !$(this).hasClass('gewaehlt')) {
+								auswahl1 = $(this).attr('class');
+								$(this).addClass('gewaehlt');
+							} else if (auswahl2 == '' && !$(this).hasClass('gewaehlt')) {
+								auswahl2 = $(this).attr('class');
+								$(this).addClass('gewaehlt');
+								if (auswahl1 == auswahl2){
+									$('.gewaehlt').addClass('geloest').removeClass('gewaehlt');
+									auswahl1 = '';
+									auswahl2 = '';
+									richtigeKarten = $('.geloest');
+									if (richtigeKarten.length == aKarten.length*2) {
+										$('#memory').html('<h1>Du hast gewonnen!</h1>').addClass('win');
+									}
+								} else {
+									setTimeout(function () {
+										$('.gewaehlt').removeClass('gewaehlt');
+										auswahl1 = '';
+										auswahl2 = '';
+									}, 1000);
+								}
+							}
+						}
+					});
+					generierteKarte.appendTo('#memory');
+					var kartenDivs = $("#memory").children();
+					while (kartenDivs.length) {
+					  $("#memory").append(kartenDivs.splice(Math.floor(Math.random() * kartenDivs.length), 1)[0]);
+					}
+				}
+			}
+    };
+
+	</script>
+	<style>
+  #wrapper {
+    margin: 20px auto;
+    width: 680px;
+  }
+  #memory {
+    display: none;
+    flex-wrap: wrap;
+    margin: 0 0 20px;
+  }
+  #memory > div {
+    width: 148px;
+    height: 148px;
+    border: 1px solid #ccc;
+    margin: 10px;
+  }
+	#memory > div > div {
+		display: none;
+		text-align: center;
+    margin: 63px 0;
+	}
+	#memory .gewaehlt {
+		border: 1px solid red;
+	}
+	#memory .gewaehlt div {
+		display: block;
+	}
+	#memory .geloest {
+		border: 1px solid green;
+	}
+	#memory .geloest div {
+		display: block;
+	}
+	#memory.win {
+		background: green;
+		text-align: center;
+	}
+	#memory h1 {
+	}
+  #neustarten {
+    display: none;
+  }
+	</style>
+</head>
+<body>
+  <div id="wrapper">
+    <button id="starten" class="btn">Spiel starten</button>
+    <div id="memory"></div>
+    <button id="neustarten" class="btn">Spiel neustarten</button>
+  </div>
+</body>
+</html>
