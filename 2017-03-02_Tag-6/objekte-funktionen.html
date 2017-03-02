@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+    $(document).ready( function() {
+
+      var i;
+      for (i=1; i<=5; i++){
+
+        (function(j){
+          $('<button>')
+            .html(j)
+            .appendTo('body')
+            .attr('data-i',j)
+            .on('click',function(){
+              console.log(j);
+              console.log($(this).attr('data-i'));
+              console.log(this.i);
+          }).get(0).i = j;
+        }(i));
+      }
+
+    });
+
+    // IIFE - Immediately-invoked function expression
+    // ist eine Funktion die sofort ausgeführt wird.
+    // wichtig dabei ist die ( vor der funcion und nach der function )
+    // es muss auch nochmal ein () gemacht werden in dem der Wert/Variable übergeben werden kann.
+    var a = 1, x;
+    (function(b){ // WICHTIG
+      //var b = a;
+      x = function() {
+        console.log(b);
+      }
+    } (a) ); // WICHTIG
+
+    a = 2;
+    x();
+
+    // jQuery wird in die Variable $x gespeichert und kann in der Funktion komplett
+    // abgekapselt verwendet werden. -> Wie in jQuery Plugins
+    (function($x){
+      $x('button');
+    } (jQuery));
+
+
+    // Closure Funktionen
+    // geben als Rückgabewert eine Funktion zurück.
+    // Die Rückgabefunktion kann mit der gespeicherten Variable ausgeführt werden.
+    var multiply = function(a) {
+      return function( b ) {
+        return a * b;
+      };
+    }
+    var m5 = multiply(5);
+    var m6 = multiply(6);
+    console.log(m5(3),m6(5));
+
+
+    // Callback Funktion (Listener Funktion ist auch eine Callback Funktion)
+    // Umgekehrt zur Closure wird eine Funktion in der Funktion mitgegeben.
+    var f1 = function( f2 ) {
+      setTimeout( function(){ f2(); }, 2000 );
+    }
+    f1( function(){ console.log('Timeout Ende');});
+
+    // Objekt mit Funktion
+    var glob = {
+      a:1,
+      b:2,
+      m:function(){
+        console.log(this); // this = Objekt glob
+        console.log(glob.a, glob.b);
+      }
+    }
+    glob.m();
+
+    // Constructor Funktion - Variable Großschreiben
+    // Hier wird mit this das Window angesprochen und dort
+    // die Variable a und b ins window gespeichert
+    var F = function(r,k) {
+      var privat = 6;
+      this.r = r;
+      this.k = k;
+      this.methode = function() {
+        console.log(this.k);
+      }
+    }
+
+    F.prototype.print = function() {
+      console.log('print', this.k);
+    }
+
+    F(6,7);
+    console.log('window.r', window.k);
+    console.log('k', k);
+
+    // Constructor kann gleich ein Objekt mit den Variablen erstellen
+    var obj = new F(8,9);
+    console.log(obj);
+    obj.methode();
+
+    var obj2 = new F('a','b');
+    console.log(obj2);
+    obj2.methode();
+    obj2.print();
+
+    var aZ = new Array();
+    Array.prototype.pushNumber = function(v){
+      if(isFinite(v)){this.push(v)}
+    }
+    Array.prototype.delete = function(i){
+      this.splice(i,1);
+    }
+    aZ.pushNumber(1);
+    aZ.pushNumber('a');
+    console.log(aZ);
+
+    var a2 = [1,2,3];
+    a2.delete(1);
+    console.log(a2);
+
+    String.prototype.toNumber = function() {
+      return this*1;
+    }
+
+    var s = '123';
+    console.log(s,s.toNumber());
+
+	</script>
+	<style>
+	</style>
+</head>
+<body>
+</body>
+</html>

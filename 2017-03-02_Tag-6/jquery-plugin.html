@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+  <script src="plugin.js"></script>
+	<script>
+		$(document).ready(function(){
+			//$('p').red({r:255, g:150, b:5}).html('neuer Inhalt');
+			$('p:nth-child(1)').formatNumbers({color:'red',fontWeight:'bold',underline:true,stroke:true})
+			$('p:nth-child(2)').formatNumbers({color:'red',fontWeight:'bold',underline:false,stroke:true})
+			$('p:nth-child(3)').formatNumbers({color:'red',fontWeight:'bold',underline:true,stroke:false})
+		})
+	</script>
+	<style>
+	</style>
+</head>
+<body>
+	<p>Die Zahl 1 ist die Zahl2 Jahr 2017</p>
+	<p>Das ist 1 langer Text.</p>
+	<p>Oder auch nicht sondern nur 1239 Zeichen.</p>
+	<p class="news">Das ist ein Newsticker</p>
+</body>
+</html>

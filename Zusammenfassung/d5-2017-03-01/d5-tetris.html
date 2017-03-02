@@ -20,17 +20,69 @@ var createTable = function() {
 	}
 }
 var random = function(i,j) { return Math.floor( Math.random() * (j-i+1) ) + i; }
-var rowCount = 1, col = 4;
-var play = function() {
 
-	if ( rowCount > countRows ||  $( 'tr:nth-child('+rowCount+') td:nth-child('+col+')' ).hasClass( 's' ) ) {
+
+
+var tile_O = [
+		[1,1],
+		[1,1]
+];
+
+var tile_T = [
+	[0,1,0],
+	[1,1,1],
+	[0,0,0]
+];
+var tile_Z = [
+	[1,1,0],
+	[0,1,1],
+	[0,0,0]
+];
+var tile_S = [
+	[0,1,1],
+	[1,1,0],
+	[0,0,0]
+];
+var tile_J = [
+	[0,1,0],
+	[0,1,0],
+	[1,1,0]
+];
+var tile_L = [
+	[0,1,0],
+	[0,1,0],
+	[0,1,1]
+];
+var tiles = [tile_O,tile_T,tile_Z,tile_S,tile_J,tile_L];
+
+var moveTemp = function(cl) {
+	var i,j, tile = activeTile;
+	for ( i=0; i<tile.length; i++ )	{
+		for ( j=0; j<tile[i].length; j++ )	{
+			if ( tile[i][j] == 1 ) {
+				$( 'tr:nth-child('+(rowCount+i)+') td:nth-child('+(col+j)+')' ).addClass( cl );
+			}
+		}
+	}
+}
+
+var rowCount = -1, col = 4;
+var activeTile = tiles[random(0,tiles.length-1)];
+var play = function() {
+	var i,j, tile = activeTile;
+	moveTemp('gt');
+	if ( rowCount+1 > countRows ||  $( '.s.gt' ).length > 0 ) {
 		$( '.g' ).removeClass( 'g' ).addClass( 's' );
-		rowCount = 1;
-		col = random(1,7);
+		rowCount = -1;
+		activeTile = tiles[random(0,tiles.length-1)];
+		col = random(1,countCols-tile[0].length+1);
 	} else {
 		$( '.g' ).removeClass( 'g' );
 	}
-	$( 'tr:nth-child('+rowCount+') td:nth-child('+col+')' ).addClass( 'g' );
+	$( '.gt' ).removeClass( 'gt' );
+
+
+	moveTemp('g');
 
 
 	rowCount++;
@@ -40,13 +92,15 @@ $( document ).ready( function() {
 	createTable();
 	I = setInterval( play, 500 );
 
-	$( document ).on( 'keypress', function(e) {
+	$( document ).on( 'keydown', function(e) {
 			var key = e.originalEvent.keyCode;
+
+			if ( key != 37 && key != 39 ) return false;
 			// 37 -> links
 			// 39 -> rechts
-			if ( key == 37 && col > 1 && !$('.g').prev().hasClass('s') ) { col--; rowCount--; }
-			if ( key == 39 && col < 7 && !$('.g').next().hasClass('s') ) { col++; rowCount--; }
-			play();
+			if ( key == 37 && col > 1 && !$('.g').prev().hasClass('s') ) { col--; rowCount--; play(); }
+			if ( key == 39 && col < countCols-activeTile[0].length+1 && !$('.g').next().hasClass('s') ) { col++; rowCount--; play(); }
+
 	});
 
 });

@@ -3,11 +3,36 @@
 <head>
 	<title></title>
 	<meta charset="utf-8">
-	<!-- <script
+	<script
 			  src="https://code.jquery.com/jquery-3.1.1.min.js"
 			  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-			  crossorigin="anonymous"></script> -->
+			  crossorigin="anonymous"></script>
 	<script>
+$( document ).ready( function() {
+
+	/*
+	$( 'nav ul li' ).on( 'mouseenter', function() {
+		$( 'ul', this ).fadeIn();
+	} ).on( 'mouseleave', function() {
+		$( 'ul', this ).fadeOut();
+	});
+	*/
+
+	$( 'nav ul li' ).on( 'click', function() {
+		$( 'ul', this ).fadeIn();
+	}).on( 'mouseleave', function() {
+		$( 'ul', this ).fadeOut();
+	});
+
+});
+
+/*
+var meinTO = setTimeout( function() { }, 1000 )
+clearTimeout( meinTO )
+
+var meinInterval = setInterval( function() { STEINfliegtnachUnten() }, 1000 )
+clearInterval( meinInterval )
+*/
 
 	</script>
 	<style>
@@ -18,7 +43,7 @@
 	nav li:hover > a { background:#000; color:#fff;  }
 	nav ul ul { display:none; position:absolute; top:calc(1.2em + 10px); left:0; background:#999; }
 	nav ul ul li { display:block; }
-	nav ul li:hover ul { display:block; }
+	/*nav ul li:hover ul { display:block; }*/
 	</style>
 </head>
 
