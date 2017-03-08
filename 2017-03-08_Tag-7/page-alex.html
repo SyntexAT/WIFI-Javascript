@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+    $(document).ready(function(){
+
+      getContentjQuery(1, function( response ){
+        $('#content').html(response.page);
+      });
+      $('a').on('click', linkAction);
+    });
+    var getContent = function( page, callback ){
+      var request = new XMLHttpRequest();
+      // Get Page Datei
+      // request.open( 'GET', 'http://wifi.1av.at/516/alex/content-page' + page + '.php' );
+      // Get (post) Page
+      // request.open( 'GET', 'http://wifi.1av.at/516/alex/content.php?page=' + page );
+      // GET Variante
+      // request.send();
+
+      // POST
+      // request.open( 'POST', 'http://wifi.1av.at/516/alex/content.php' );
+      // request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded'); // WICHTIG - Sonst kommen keine Daten an
+      // POST Variante
+      // request.send( 'page=' + page);
+
+      // JSON
+      request.open( 'POST', 'http://wifi.1av.at/516/alex/content.php' );
+      request.setRequestHeader('Content-Type', 'application/json'); // Content Type wenn JSON geschickt wird
+      request.send( JSON.stringify( {page:page} ) );
+
+      ajaxLoading(true);
+      request.onreadystatechange = function(){
+        if( request.readyState == 4 && request.status == 200) {
+          //$('#content').html(request.responseText);
+          ajaxLoading(false);
+          callback(request.responseText);
+        }
+      }
+    }
+
+    var getContentjQuery = function( page, callback){
+      ajaxLoading(true);
+      $.ajax({
+        url: 'http://wifi.1av.at/516/alex/content.php', // URL von Server
+        method: 'POST', // Methode
+        data: {page:page},
+        success: function( resp ){
+          callback( resp );
+          ajaxLoading(false);
+        }
+      });
+
+    }
+
+
+    var linkAction = function( e ){
+        e.preventDefault();
+        // e.stopPropagation(); - Das Event wird nicht auf die Eltern Elemente weitergegeben!
+        $('.active').removeClass('active');
+        var page = $(this).attr('data-page');
+        $(this).parent().addClass('active');
+        getContentjQuery(page, function( response ){
+          $('#content').html(response.page);
+          //$('#content a').on('click', linkAction);
+          //$('a').off('click').on('click', linkAction);
+        });
+    }
+    var ajaxLoading = function( b ){
+      if(b) { // Erzeuge Loading Overlay
+        $('<div id="ajaxloader">').css({
+          position: 'fixed',
+          width: '100%',
+          top: 0,
+          rigth: 0,
+          bottom: 0,
+          left: 0,
+          zIndex: 10,
+          background: 'rgba(0,0,0,0.5)',
+          color: '#fff'
+        }).html('Inhalte werden geladen!').appendTo('body');
+      } else { // Zerstöre Loading Overlay
+        $('#ajaxloader').remove();
+      }
+    }
+
+    $(document).on('click', 'a', linkAction); // DOIT! Funktion wird an alle Elemente a hinzugefügt
+    //  Egal ob die Elemte schon da sind oder nicht
+
+	</script>
+	<style>
+  .active a {
+    color: red;
+  }
+	</style>
+</head>
+<body>
+  <ul>
+    <li class="active"><a href="content-page1.php" data-page="1">Seite 1</a></li>
+    <li><a href="content-page2.php" data-page="2">Seite 2</a></li>
+    <li><a href="content-page3.php" data-page="3">Seite 3</a></li>
+  </ul>
+  <div id="content"></div>
+</body>
+</html>

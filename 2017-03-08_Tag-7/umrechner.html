@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+    var currentRate, aCurrency = [];
+    $(document).ready(function(){
+      $('#convert-button').on('click', function(e){
+        e.preventDefault();
+        changeMoney();
+      })
+      generateSelect();
+    });
+
+    var generateSelect = function(){
+
+      $.ajax({
+        url: 'http://wifi.1av.at/516/alex/ecb.php',
+        method: 'GET',
+        dataType: 'xml',
+        success: function(data){
+          $(data).find('[currency]').each(function(){
+            $('<option>').html($(this).attr('currency')).attr('data-currency', $(this).attr('rate')).appendTo('#select-currency');
+          });
+        }
+      })
+    };
+
+    $(document).on('change', '#select-currency', function(){
+      outputCurrency = $('#euro-input').val() * $(this).attr('data-currency');
+      console.log($('#euro-input').val(),  $(this));
+      $('#output').val(zahlAusgeben(outputCurrency));
+    })
+    var changeMoney = function(){
+      var inputEuro, outputUSD;
+      $.ajax({
+        url: 'http://wifi.1av.at/516/alex/ecb.php',
+        method: 'GET',
+        dataType: 'xml',
+        success: function(data){
+          currentCurrency = $('#select-currency').val();
+          currentRate = $(data).find('[currency="' + currentCurrency + '"]').attr('rate');
+          inputEuro = $('#euro-input').val();
+          outputCurrency = inputEuro * currentRate;
+          $('#output').val(zahlAusgeben(outputCurrency));
+        }
+      });
+
+    }
+
+	</script>
+	<style>
+	</style>
+</head>
+<body>
+  <form>
+    EURO <input id="euro-input" placeholder="€">
+    <select id="select-currency">
+    </select>
+    <button id="convert-button">></button>
+    <input id="output" readonly="">
+  </form>
+  <div id="content"></div>
+</body>
+</html>

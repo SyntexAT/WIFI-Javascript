@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+
+    /*
+
+      Zugriff auf PHP Datei von anderer Domain erlauben!
+      header('Access-Control-Allow-Origin: *');
+      header('Access-Control-Allow-Headers:Origin, X-Requested-With, Content-Type, Accept');
+
+    */
+
+    var request = new XMLHttpRequest(); // AJAX Objekt erstellen
+
+    request.open( 'GET', 'http://wifi.1av.at/516/alex/test.php' ); // Initalisieren der Methode
+    request.send(); // Abschicken des AJAX
+    request.onreadystatechange = function(){ // Es wird abgefragt ob State gewechselt wurde.
+      if( request.readyState == 4) { // Wenn die State 4 ist, ist die Abfrage fertig
+        console.log(request.responseText); // Alle Daten die ich vom Server bekomme.
+      }
+    }
+
+
+	</script>
+	<style>
+  </style>
+</head>
+<body>
+</body>
+</html>
