@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+    var gameData = {
+      name: '',
+      currentQuestion: 1,
+      maxQuestion: 5,
+      points: 0
+    }
+
+    $.ajaxSetup({
+      url: 'http://wifi.1av.at/516/tn/quiz2.php',
+      type: 'POST'
+    });
+
+    var getQuestion = function(){
+      $('#frage-wird-geladen').show();
+      $.ajax({
+        data: {type:'frageneu', level:gameData.currentQuestion},
+        success: function(data){
+          setTimeout(function () {
+            $('#frage-output').attr('data-frageID', data.frageID).html(data.frage);
+            for(var i in data.antworten){
+              $('span', '#antwort' + (i)).attr('data-antwortID', i).html(data.antworten[i]);
+            }
+            $('#fragen').show();
+            $('#frage-wird-geladen').hide();
+          }, 2000);
+        },
+        error: function(){
+          console.log(arguments);
+        }
+      });
+    }
+
+    var sendAnswer = function(answerID, questionID){
+        $.ajax({
+          data: {type:'check', level:gameData.currentQuestion, frageID:questionID, antwort: answerID},
+          success: function(data){
+            console.log(data);
+          }
+        });
+        getQuestion();
+    }
+
+    var getHighscore = function(){
+      $.ajax({
+        data: {type:'showhighscore'},
+        success: function(data){
+          $(data.html).appendTo('#highscore');
+          $('#fragen').hide();
+          $('#highscore').show();
+        },
+        error: function(){
+          console.log(arguments);
+        }
+      });
+    }
+
+
+    $(document).on('click', '#antworten > div', function(e){
+      e.preventDefault();
+      gameData.currentQuestion++;
+      if(gameData.currentQuestion <= gameData.maxQuestion){
+        sendAnswer($(this).attr('data-antwortid'),$('#frage-output').attr('data-antwortid'));
+      } else {
+        getHighscore();
+      }
+    });
+
+    $(document).on('click', '#start button', function(e) {
+      e.preventDefault();
+      if($('#name').val()){
+        gameData.name = $('#name').val();
+      } else {
+        console.log('NAMEEE!');
+        return;
+      }
+      $('#start').hide();
+      getQuestion();
+    });
+
+	</script>
+	<style>
+  #wrapper {
+    width: 640px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+  }
+  #frage-wird-geladen,
+  #fragen,
+  #highscore {
+    display: none;
+  }
+  #antworten {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  #frage-wird-geladen {
+    text-align: center;
+  }
+  #frage-output {
+    width: 90%;
+    margin: 10px auto;
+  }
+  #antworten > div {
+    width: 40%;
+    border: 1px solid #ccc;
+    padding: 7px;
+    margin-bottom: 10px;
+    background: #f1f1f1;
+  }
+	</style>
+</head>
+<body>
+  <div id="wrapper">
+    <h1>Quiz</h1>
+    <div id="start">
+      Name: <input type="text" id="name"><br>
+      <button>Quiz starten</button>
+    </div>
+    <div id="frage-wird-geladen">Frage wird geladen</div>
+    <div id="fragen">
+      <div id="frage-output">Frage:</div>
+      <div id="antworten">
+        <div id="antwort0">A: <span></span></div>
+        <div id="antwort1">B: <span></span></div>
+        <div id="antwort2">C: <span></span></div>
+        <div id="antwort3">D: <span></span></div>
+      </div>
+    </div>
+    <div id="highscore"></div>
+  </div>
+</body>
+</html>

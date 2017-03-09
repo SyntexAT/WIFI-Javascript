@@ -4,10 +4,6 @@ body {
   line-height: 1.4em;
 }
 
-#hinweis {
-  margin-bottom: 10px;
-}
-
 input, select {
   padding: 2px 5px;
 }
