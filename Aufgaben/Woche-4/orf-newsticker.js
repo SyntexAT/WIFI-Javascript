@@ -56,7 +56,7 @@
         })
       } else {
         ul.css({
-          left: ul.width()
+          left: div.width()
         })
       }
     }
