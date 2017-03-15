@@ -1,0 +1,203 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+/*
+      var meinCountdown = function( x ){
+        $('#countdown').html(x--);
+        setTimeout( function() {meinCountdown(x) }, 1000);
+      }
+*/
+
+      var meinCountdown = function( x, id, callback ){
+        var count = function(){
+          $( id ).html( x-- );
+          if(x >= 0) {
+            setTimeout( count, 1000);
+          } else {
+            if (typeof callback == 'function') {
+              callback();
+            }
+          }
+        }
+        count();
+      }
+
+    $(document).ready(function(){
+        var c = $('#countdown').html()*1;
+        meinCountdown(c, '#countdown', function(){ $('#countdown').css('color', 'red') } );
+
+        var c2 = $('#countdown2').html()*1;
+        var c3 = $('#countdown3').html()*1;
+
+        meinCountdown(c2, '#countdown2', function(){
+          meinCountdown(c3, '#countdown3', function(){
+            meinCountdown( 100, '#countdown2')
+          });
+        });
+
+          /*
+        for( ; c>=0; c--){
+          $('#countdown').html(c);
+        }
+      */
+
+/* PROMISE !!!!
+      var x = 1;
+      var pro = new Promise( function(resolve, reject) { // Ein neues Promise mit einer Function('erfolgreich', 'fehler') erstellen
+        if ( x == 1 ) {   // WENN x = 1 dann wird resolve ausgeführt
+          resolve('OK');
+        } else {          // SONST wird reject ausgeführt
+          reject('ERROR');
+        }
+      });
+
+      // Promise wird mit der Variable und den Methoden .then[ERFOLGREICH] und .catch[FEHLER] ausgeführt
+      //pro.then( function(d){ alert(d); }).catch( function(d){console.log(d);});
+*/
+
+      var meinCountdownPromise = function(i, id){
+        var timeout;
+        return new Promise( function(res, rej){
+          var count = function(){
+            $(id).html(i--);
+            if( i>=0 ) {
+              timeout = setTimeout(count, 1000);
+            } else {
+              res();
+            }
+          }
+          $(id).on('click', function(e){
+            rej(clearTimeout(timeout));
+          })
+          if(isNaN(i) || i > 10){
+            rej('Start ungültig');
+          } else {
+            count();
+          }
+        });
+      }
+
+      meinCountdownPromise(10,'#c4')
+      .then( function(){
+        $('#c4').css('color','green');
+      })
+      .catch( function(d){
+        console.log('ERROR', d);
+      });
+
+    });
+
+    $.ajaxSetup({
+      url: 'http://wifi.1av.at/516/alex/promisetest.php', // number => x
+      type: 'POST',
+      dataType: 'json'
+    })
+
+    $(document).on('click','#btn', function(e){
+      e.preventDefault();
+      var add10 = function(z, cb){
+        $.ajax({
+          data:{number:z},
+          success: function( resp ){
+            cb( resp.x * 1 + 10 );
+          }
+        })
+      }
+
+      var multiply5 = function(z, cb){
+        $.ajax({
+          data:{number:z},
+          success: function( resp ){
+            cb( resp.x * 5 );
+          }
+        })
+      }
+
+      add10( 3, function(erg){
+        multiply5(erg, function(erg){
+          add10(erg, function(erg){
+            console.log(erg);
+          })
+        })
+      });
+
+    });
+
+    $(document).on('click','#btn2', function(e){
+      e.preventDefault();
+
+      var add10 = function( z ){
+        return new Promise( function(res,rej){
+          $.ajax({
+            data: {number:z},
+            success: function(resp){
+              res(resp.x*1+10);
+            }
+          })
+        });
+      };
+
+      var multiply5 = function( z ){
+        return new Promise( function(res,rej){
+          $.ajax({
+            data: {number:z},
+            success: function(resp){
+              res(resp.x*5);
+            }
+          })
+        });
+      };
+
+      add10(3).then(multiply5).then(add10).then(console.log);
+
+    });
+
+    $(document).on('click','#btn3', function(e){
+      e.preventDefault();
+
+      var req = function(z){
+        return new Promise(function(res,rej){
+          $.ajax({
+            data:{number:z},
+            success:function(d){
+              res(d);
+            }
+          });
+        });
+
+      };
+
+      Promise.all([req(1),req(2)]).then(function(){ console.log( '1+2 fertig ');});
+
+/* AJAX PROMISE (.done/.fail)
+      $.ajax({
+        data:{number:5}
+      }).done(function(){  })
+*/
+
+//      $.when(req(1),req(2)).done(function(){});
+
+    });
+
+	</script>
+	<style>
+	</style>
+</head>
+<body>
+  <button class="btn" id="btn">Starte AJAX Calls (ohne Promise)</button>
+  <button class="btn" id="btn2">Starte AJAX Calls (mit Promise)</button>
+  <button class="btn" id="btn3">Starte 2 Calls</button>
+  <hr>
+  <div id="countdown">5</div>
+  <div id="countdown2">8</div>
+  <div id="countdown3">2</div>
+  <hr>
+  <div id="c4">5</div>
+</body>
+</html>

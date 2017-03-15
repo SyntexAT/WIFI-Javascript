@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+    $.ajaxURL = 'http://wifi.1av.at/516/tn/userdata.php?function=';
+    $.ajaxSetup({
+      type: 'POST',
+      dataType: 'json'
+    });
+
+    user = {};
+
+    var checkInput = function(fun, val, id){
+      return new Promise( function( res, rej ){
+        $.ajax({
+          url: $.ajaxURL + 'check',
+          data: {type:fun,value:val},
+          success: function(resp){
+            if (resp.result == 'ok'){
+              res(resp.result);
+            } else {
+              rej();
+            }
+          }
+        })
+      }).catch( function(){$(id).addClass('error')});
+    };
+
+    var errorHandling = function(id){
+      $('#' + id).addClass('error');
+    }
+
+    var saveData = function(){
+      console.log('saved');
+    }
+
+    $(document).on('submit', '#userverwaltung', function(e){
+      e.preventDefault();
+
+      user.name = $('#name').val();
+      user.nameID = $('#name').attr('id');
+      user.geb = $('#geb').val();
+      user.gebID = $('#geb').attr('id');
+      user.plz = $('#plz').val();
+      user.plzID = $('#plz').attr('id');
+      user.ort = $('#ort').val();
+      user.ortID = $('#ort').attr('id');
+      user.email = $('#email').val();
+      user.emailID = $('#email').attr('id');
+      user.interessen = [];
+
+      $(":checked").each(function() {
+          user.interessen.push(this.value);
+      });
+
+      var checkName = function(){ return checkInput('string', user.name, user.nameID)};
+      var checkGeb = function(){ return checkInput('string', user.geb, user.gebID) };
+      var checkPLZ = function(){ return checkInput('string', user.plz, user.plzID) };
+      var checkOrt = function(){ return checkInput('string', user.ort, user.ortID) };
+      var checkEmail = function(){ return checkInput('string', user.email, user.emailID) };
+
+      var saveData = function(){
+    		return new Promise(function(gut,schlecht) {
+    			$.ajax({
+    				url: 'http://wifi.1av.at/516/tn/userdata.php?function=save&name=rene',
+    				data:{value:JSON.stringify(user)},
+    				success:function(d) {
+    					console.log(d);
+    				}
+    			});
+    		});
+      }
+
+      checkName()
+        .then(checkGeb)
+        .then(checkPLZ)
+        .then(checkOrt)
+        .then(checkEmail)
+        .then( function(){
+          if($('.error').length == 0){
+            saveData()
+    					.then(function(){
+                console.log('gespeichert');
+              })
+    					.catch(function(){
+                console.log('nicht gespeichert');
+              });
+          }
+        })
+    });
+
+
+	</script>
+	<style>
+    form {
+      width: 462px;
+      margin: 20px auto;
+      padding: 15px;
+      background: #fefefe;
+      border: 1px solid #ccc;
+    }
+    label {
+      width: 150px;
+      display: inline-block;
+      vertical-align: top;
+      white-space: nowrap;
+    }
+    input {
+      padding: 2px 5px;
+      margin-bottom: 5px;
+      border: 1px solid #ccc;
+    }
+    input[type="text"], .interessen > div {
+      display: inline-block;
+      width: 300px;
+    }
+    .interessen > div > label {
+      width: auto;
+    }
+	</style>
+</head>
+<body>
+  <form id="userverwaltung">
+    <h1>Userverwaltung</h1>
+    <label for="name">Name:</label><input type="text" name="name" id="name"><br>
+    <label for="geb">Geburtsdatum:</label><input type="text" placeholder="TT.MM.JJJJ" name="geb" id="geb"><br>
+    <label for="plz">PLZ:</label><input type="text" name="plz" id="plz" maxLength="4"><br>
+    <label for="ort">Ort:</label><input type="text" name="ort" id="ort"><br>
+    <label for="email">E-Mail:</label><input type="text" name="email" id="email"><br>
+    <div class="interessen">
+      <label for="interessen">Interessen:</label>
+      <div>
+        <label><input type="checkbox" name="html" value="HTML">HTML</label>
+        <label><input type="checkbox" name="javascript" value="Javascript">Javascript</label>
+        <label><input type="checkbox" name="jquery" value="jQuery">jQuery</label>
+        <label><input type="checkbox" name="css" value="CSS">CSS</label>
+        <label><input type="checkbox" name="php" value="PHP">PHP</label>
+      </div>
+    </div>
+    <button class="save btn">Speichern</button>
+  </form>
+</body>
+</html>
