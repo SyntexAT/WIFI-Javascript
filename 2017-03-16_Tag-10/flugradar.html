@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+    var oAirports = {
+      vienna: { name: 'Wien', x: 50, y: 420, identification: 'W', target: 'london', targetID: 'l' },
+      london: { name: 'London', x: 250, y: 420, identification: 'L', target: 'frankfurt', targetID: 'f' },
+      paris: { name: 'Paris', x: 50, y: 50, identification: 'P', target: 'vienna', targetID: 'v' },
+      frankfurt: { name: 'Frankfurt', x: 250, y: 50, identification: 'F', target: 'paris', targetID: 'p' }
+    };
+    var gameData = {
+      planeNumber: 0,
+      arrived: 0,
+      startGame: function(){
+        $('#welt').show();
+        $('#spielstarten').hide();
+        gameData.generateWorld();
+      },
+      generateWorld: function(){
+        for(var i in oAirports){
+          var x, y;
+          $('<div>').css({
+            left: oAirports[i].x,
+            bottom: oAirports[i].y
+          }).attr({
+            'id': i,
+            'data-from': oAirports[i].identification,
+            'data-target': oAirports[i].target
+          })
+          .addClass('airport')
+          .html(oAirports[i].identification)
+          .on('click', function(){
+            x = parseInt($(this).css('left'));
+            y = parseInt($(this).css('bottom'));
+            from = $(this).attr('data-from');
+            target = $(this).attr('data-target');
+            id = $(this).attr('id');
+            var newPlane = new Plane( gameData.planeNumber++, x, y, from, oAirports[target].x, oAirports[target].y, oAirports[id].targetID );
+            newPlane.generatePlane();
+            newPlane.interval = setInterval( function(){newPlane.moveIt();}, 50);
+            console.log(newPlane);
+          })
+          .appendTo('#welt');
+        }
+      },
+    }
+
+    var Plane = function( planeNumber, startX, startY, stopName, stopX, stopY, target ){
+      this.planeNumber = planeNumber;
+	    this.startX = startX;
+	    this.startY = startY;
+	    this.stopName = target;
+	    this.stopX = stopX;
+	    this.stopY = stopY;
+      this.generatePlane = function(){
+        $('<div>').css({
+          left: this.startX,
+          bottom: this.startY
+        }).attr({
+          'id': 'p' + this.planeNumber
+        }).html(this.stopName).addClass('plane').appendTo('#welt');
+      };
+      this.moveIt = function(){
+        var currentX, currentY, stopX, stopY, currentPlane;
+        currentPlane = $('#p' + this.planeNumber);
+        currentX = parseInt( currentPlane.css('left') );
+        currentY = parseInt( currentPlane.css('bottom') );
+        stopX = this.stopX;
+        stopY = this.stopY;
+
+        // console.log('cx:' + currentX, 'sx:' + stopX,'cy:' + currentY,'sy:' + stopY);
+        if (currentX == stopX) {
+          // rauf - runter
+          if(currentY < stopY) {
+            currentPlane.css({ bottom: currentY+1 });
+          } else if (currentY > stopY){
+            currentPlane.css({ bottom: currentY-1 });
+          }
+        } else if (currentY == stopY) {
+          // links - rechts
+          if(currentX < stopX) {
+            currentPlane.css({ left: currentX+1 });
+          } else if (currentX > stopX){
+            currentPlane.css({ left: currentX-1 });
+          }
+        } else {
+
+          // KEINE AHNUNG
+          var degrees = Math.atan2(stopY, stopX);
+          var vx = Math.cos(degrees);
+          var vy = Math.sin(degrees);
+          currentPlane.css({
+          })
+          console.log();
+          clearInterval(this.interval);
+        }
+        if(currentX == stopX && currentY == stopY){
+          currentPlane.hide();
+          clearInterval(this.interval);
+        }
+      }
+		}
+
+    $(document).on('click', '#spielstarten', function(e){
+      e.preventDefault();
+      gameData.startGame();
+    });
+
+    $(document).on('click', '.plane', function(){
+      $(this).addClass('selected');
+    });
+
+    $(document).on('click', '#welt', function(e){
+      var x = e.pageX - $('.wrapper').offset().left;
+      var y = e.pageY - $('#welt').offset().top;
+      if($('.selected').length > 0 ){
+        $('.selected').css({
+          left: x,
+          top: y
+        })
+        $('.selected').removeClass('selected');
+      }
+    });
+
+	</script>
+	<style>
+    .wrapper {
+      width: 322px;
+      margin: 20px auto;
+    }
+    #start {
+
+    }
+
+    #welt {
+      position: relative;
+      display: none;
+      width: 100%;
+      height: 480px;
+      margin: 50px auto;
+      border: 1px solid #ccc;
+    }
+    .airport {
+      position: absolute;
+      width: 45px;
+      height: 35px;
+      border: 1px solid #ccc;
+      padding: 5px 0;
+      text-align: center;
+      line-height: normal;
+      cursor: pointer;
+    }
+    .plane {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background: green;
+      color: #fff;
+      font-size: 16px;
+      text-align: center;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .selected{
+      border: 3px solid red;
+    }
+	</style>
+</head>
+<body>
+  <div class="wrapper">
+    <section id="start">
+      <h1>Flugradar</h1>
+      <button id="spielstarten">Spiel starten</button>
+    </section>
+    <section id="welt">
+
+    </section>
+  </div>
+</body>
+</html>

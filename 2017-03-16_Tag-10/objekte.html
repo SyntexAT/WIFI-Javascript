@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+	$(document).ready(function(){
+
+	  var o = {
+	    a:1,
+	    b:2,
+	    m:function(){
+	      console.log('o.m', this.a, this.b);
+	    }
+	  }
+
+		  var K = function(p1,p2){
+		    this.a = p1;
+		    this.b = p2;
+		    this.m = function(){
+		      console.log('K.m',this.a,this.b);
+		    }
+			/*
+			Ohne Bind mit Variable auf das this.a zugreifen !
+
+			var _t = this;
+	    $('<button>Klick</button>').on('click', function(){
+	      console.log('geklickt', _t.a);
+	    }).appendTo('body');
+			*/
+
+			/*
+			Bind Funktion - Weitergabe vom "this" Element
+
+			var klickFunktion = function(){
+				console.log('geklickt', this.a);
+			}
+
+	    $('<button>Klick</button>').on('click', klickFunktion.bind(this)).appendTo('body');
+			*/
+	  }
+
+		var oK = new K(3,4);
+		var oK2 = new K(5,6);
+
+	  var p = Object.create(o);
+	  p.a = 3;
+	  p.m2 = function(){
+	    console.log('p.m2',this.a,this.b);
+	  }
+
+	  console.log(p.a,p.b);
+	  p.m.call(o);
+	  p.m2.call(o); // Call(o) greift auf die Daten (this.a,this.b) vom object o zu.
+	  o.m();
+
+		console.log(p.hasOwnProperty('a'), p.hasOwnProperty('b'));
+
+ ///////////
+
+console.log('----GET/SET----');
+		var x = {
+			get a(){return this.val;},
+			set a(value){this.val=value*2},
+		};
+
+		x.a=5;
+		console.log(x.a);
+
+console.log('----GET/SET v2----');
+
+	var x2 = Object.create({},{ // create braucht den Object.prototype ({'prototype'}, {})
+		a:{
+			//value: 5,
+			//writeable: true,
+			//enumerable: false, // standart true - Wenn false dann wird es in einer for(var i in x2) Schleife nicht ausgegeben
+			get: function(){
+				//return this.val;
+
+				var s = this.val + '';
+				return s.replace('.',',');
+			},
+			set: function(value){this.val=value*2;}
+		}
+	});
+	x2.a = 5;
+	console.log(x2.a);
+
+	});
+
+	</script>
+	<style>
+	</style>
+</head>
+<body>
+</body>
+</html>
