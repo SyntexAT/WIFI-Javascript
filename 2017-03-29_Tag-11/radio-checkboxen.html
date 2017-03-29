@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+  <script src="jquery.convertRadioCheckbox.js"></script>
+	<script>
+    $(document).ready(function(){
+      $('input[type="radio"]').makeNiceRadios();
+      $('input[type="checkbox"]').makeNiceCheckboxes();
+    });
+	</script>
+	<style>
+  canvas {
+    border: 1px solid red;
+    cursor: pointer;
+  }
+	</style>
+</head>
+<body>
+  <input type="radio" name="gender" id="man" value="m"> Männlich
+  <input type="radio" name="gender" id="woman" value="w"> Weiblich
+  <input type="radio" name="gender" id="ka" value="ka"> Keine Ahnung<br>
+  <br>
+  <input type="checkbox" name="einverstanden" id="einverstanden" value="ok"> Okay?
+  <input type="checkbox" name="einverstanden" id="nichteinverstanden" value="ok"> nein?
+</body>
+</html>

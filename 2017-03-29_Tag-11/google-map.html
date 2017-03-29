@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?callback=machKarte" defer></script>
+	<script>
+    var aMeineMarker = localStorage.getItem('lokaleMarker');
+    aMeineMarker = aMeineMarker ? JSON.parse(aMeineMarker) : [];
+
+    var machKarte = function() {
+      var karte = new google.maps.Map($('#meineMap').get(0), {
+        center: {lat: 0, lng: 0},
+        zoom: 8
+      });
+
+      var meineBounds = new google.maps.LatLngBounds();
+
+      for (var i in aMeineMarker) {
+        var marker = new google.maps.Marker({
+          id: i,
+          position: aMeineMarker[i],
+          title: aMeineMarker[i].name,
+          map: karte,
+          animation: google.maps.Animation.DROP
+        });
+        (function(element){
+          marker.addListener('click',function(){
+            if(confirm('Bist du dir sicher?')){
+              aMeineMarker.splice(aMeineMarker.indexOf(element),1);
+              localStorage.setItem('lokaleMarker', JSON.stringify(aMeineMarker));
+              this.setMap(null);
+            }
+          });
+        }(aMeineMarker[i]));
+        meineBounds.extend(aMeineMarker[i]);
+      }
+
+      karte.fitBounds(meineBounds);
+
+      /*try{
+        navigator.geolocation.getCurrentPosition(function(positionClient) {
+          var pos = {
+            lat:positionClient.coords.latitude,
+            lng:positionClient.coords.longitude
+          }
+
+          karte.setCenter(pos);
+          var marker = new google.maps.Marker({
+            position: pos,
+            map: karte
+          });
+
+        });
+      }catch(e){
+        console.log('Du bist nirgendwo!');
+      }*/
+
+      $(document).on('click', '#save button',function(e){
+        e.preventDefault();
+        var name = $('#save input').val();
+        if (name==''){
+          alert('Bitte geben Sie einen Namen ein!');
+          return false;
+        }
+        var centerPosition = karte.getCenter().toJSON();
+        centerPosition.name = name;
+        console.log(centerPosition);
+        var marker = new google.maps.Marker({
+          position:centerPosition,
+          map:karte
+        })
+        aMeineMarker.push(centerPosition);
+        localStorage.setItem('lokaleMarker', JSON.stringify(aMeineMarker));
+      })
+    };
+
+
+    $(document).ready(function() {
+      var ctx = $('canvas').get(0).getContext('2d');
+      ctx.fillStyle ='#000';
+      ctx.lineWidth = 1;
+      ctx.moveTo(0,50);
+      ctx.lineTo(100,50);
+      ctx.moveTo(50,0);
+      ctx.lineTo(50,100);
+      ctx.stroke();
+    })
+
+	</script>
+	<style>
+    html, body, #wrapper, #meineMap {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+    #wrapper {
+      position: relative;
+    }
+    canvas {
+      position: absolute;
+      top: calc(50% - 50px);
+      left: calc(50% - 50px);
+      pointer-events: none;
+    }
+    #save {
+      position: fixed;
+      right: 20px;
+      top: 20px;
+      background: #fff;
+      width: 300px;
+      padding: 10px;
+    }
+    #save input {
+      width: calc(100% - 14px);
+      margin-bottom: 5px;
+    }
+    #save button {
+      width: 100%;
+
+    }
+	</style>
+</head>
+<body>
+  <div id="wrapper">
+    <div id="meineMap"></div>
+    <canvas id="canvas" width="100" height="100"></canvas>
+    <div id="save">
+      <input type="text" id="name"><button class="btn">Save</button>
+    </div>
+  </div>
+</body>
+</html>

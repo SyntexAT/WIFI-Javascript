@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+
+  var i = 0;
+
+  var drawStuff = function(){
+      var canvas = $('canvas').get(0);
+      var ctx = canvas.getContext('2d');
+
+      ctx.clearRect(0,0,200,200);
+
+      ctx.fillStyle = 'red'; // Quadrat
+      ctx.fillRect(50,50,100,100);
+
+      ctx.strokeStyle = 'green'; // Linien zu einem Dreieck
+      ctx.fillStyle = 'rgba(0,0,0,0.5)';
+      ctx.lineWidth = 5;
+      ctx.moveTo(25, 25);
+      ctx.lineTo(175, 175);
+      ctx.lineTo(175, 25);
+      //ctx.lineTo(25, 25);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.fill();
+
+
+      var verlauf = ctx.createLinearGradient(0+i,0,50+i,0);
+      verlauf.addColorStop(0,'blue');
+      verlauf.addColorStop(1,'pink');
+
+      ctx.fillStyle = verlauf;
+
+      ctx.beginPath(); // Kreis
+      ctx.arc( 25+i, 175-i, 25, 0, 2*Math.PI);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.fill();
+
+      ctx.fillStyle = 'rgba(0,0,0,0.5)';
+      ctx.strokeStyle = 'black';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0,100);
+      ctx.lineTo(200,100);
+      ctx.stroke();
+
+      ctx.font = '30px Arial';
+      ctx.fillText('Wifi Wien g', 0,100);
+      ctx.strokeText('Wifi', 0,100);
+
+
+      //Ursprüngliches Coordinatensystem verändern
+      //ctx.translate(100,100);
+
+      // Punkt rotieren
+      //ctx.rotate(0.5*Math.PI);
+
+      //var imageObjekt = new Image();
+      //imageObjekt.src = 'bmi_tabelle.gif';
+      //imageObjekt.onload = function(){
+        //ctx.drawImage( imageObjekt, 0, 0 );
+      //}
+      i++;
+    };
+
+    $(document).ready(function(){
+      setInterval(drawStuff, 40);
+    })
+	</script>
+	<style>
+
+    canvas { border: 1px solid red }
+
+	</style>
+</head>
+<body>
+
+  <canvas id="canvas" width="200" height="200"></canvas>
+
+</body>
+</html>
