@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+    var slotInter, bgPosX = 0, bgPosY = 0;
+    var startStamp = 0, stopStamp = 0;
+
+/*
+  ON CLICK
+
+    $(document).on('click', '.slot', function(){
+      bgPosX = parseInt( $(this).css('background-positionX') );
+      bgPosY = parseInt( $(this).css('background-positionY') );
+      if($(this).hasClass('rotate')){
+        clearInterval(slotInter);
+        $('.rotate').removeClass('rotate');
+      } else {
+        $(this).addClass('rotate');
+        clearInterval(slotInter);
+        slotInter = setInterval( function(){
+          bgPosX -= 480/7;
+          if (bgPosX < -412){
+            bgPosY -= 200;
+            bgPosX = 0;
+          }
+          $('.slot.rotate').css({
+            backgroundPosition: bgPosX + 'px ' + bgPosY + 'px'
+          });
+        }, 100);
+      }
+    });
+    */
+
+    var clickEvent = 'ontouchstart' in window ? 'touchstart' : 'click';
+
+    $(document).on(clickEvent, '.slot', function(e){
+      var clientY = e.clientY || e.originalEvent.targetTouches[0].clientY;
+        startStamp = Math.floor(Date.now() / 1);
+          clearInterval(slotInter);
+      if(clickEvent == 'touchstart'){
+        $(this).data('touchstartY', clientY);
+        return false;
+      }
+    });
+    $(document).on('touchend', '.slot' , function(e){
+      var clientYstop = e.originalEvent.changedTouches[0].clientY;
+      var clientYstart = $(this).data('touchstartY');
+        stopStamp = Math.floor(Date.now() / 1);
+      if(clientYstop - clientYstart > 20){
+        $(this).trigger('nachunten');
+      } else if(clientYstop - clientYstart < 20) {
+        $(this).trigger('nachoben');
+      }
+    });
+
+
+    $(document).on('nachunten', '.slot', function(e){
+      bgPosX = parseInt( $(this).css('background-positionX') );
+      bgPosY = parseInt( $(this).css('background-positionY') );
+      if($(this).hasClass('rotate')){
+        clearInterval(slotInter);
+        $('.rotate').removeClass('rotate');
+      } else {
+        $(this).addClass('rotate');
+        clearInterval(slotInter);
+        slotInter = setInterval( function(){
+          bgPosX -= 480/7;
+          if (bgPosX < -412){
+            bgPosY -= 200;
+            bgPosX = 0;
+          }
+          $('.slot.rotate').css({
+            backgroundPosition: bgPosX + 'px ' + bgPosY + 'px'
+          });
+        }, 100);
+      }
+    });
+
+    $(document).on('nachoben', '.slot', function(e){
+      bgPosX = parseInt( $(this).css('background-positionX') );
+      bgPosY = parseInt( $(this).css('background-positionY') );
+      if($(this).hasClass('rotate')){
+        clearInterval(slotInter);
+        $('.rotate').removeClass('rotate');
+      } else {
+        $(this).addClass('rotate');
+        clearInterval(slotInter);
+        slotInter = setInterval( function(){
+          bgPosX += 480/7;
+          console.log(bgPosX, bgPosY);
+          if (bgPosX >= 0){
+            bgPosY -= 200;
+            bgPosX = 0;
+          }
+          $('.slot.rotate').css({
+            backgroundPosition: bgPosX + 'px ' + bgPosY + 'px'
+          });
+        }, 100);
+      }
+    });
+
+
+/*
+      bgPosX = parseInt( $(this).css('background-positionX') );
+      bgPosY = parseInt( $(this).css('background-positionY') );
+      if($(this).hasClass('rotate')){
+        clearInterval(slotInter);
+        $('.rotate').removeClass('rotate');
+      } else {
+        $(this).addClass('rotate');
+        clearInterval(slotInter);
+        slotInter = setInterval( function(){
+          bgPosX -= 480/7;
+          if (bgPosX < -412){
+            bgPosY -= 200;
+            bgPosX = 0;
+          }
+          $('.slot.rotate').css({
+            backgroundPosition: bgPosX + 'px ' + bgPosY + 'px'
+          });
+        }, 100);
+      }
+    });
+    */
+
+
+        $(document).on(clickEvent, '#image-wrapper img', function(e){
+          var clientX = e.clientX || e.originalEvent.targetTouches[0].clientX;
+
+          if (clickEvent == 'touchstart'){
+            $(this).data('touchstartX', clientX);
+            return false;
+          }
+
+        });
+
+	</script>
+	<style>
+    #slotmachine {
+      width: 215px;
+      margin: 20px auto 0;
+    }
+    .slot {
+      background: url(av/reelSpin-480x400.png);
+      display: inline-block;
+      width: calc(480px / 7);
+      height: 200px;
+    }
+    .slot:hover {
+      background-position: -68.56px 0;
+    }
+	</style>
+</head>
+<body>
+  <div id="slotmachine">
+    <div class="slot"></div>
+    <div class="slot"></div>
+    <div class="slot"></div>
+  </div>
+</body>
+</html>

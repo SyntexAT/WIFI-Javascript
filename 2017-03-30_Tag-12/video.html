@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" href="../jquery-ui.min.css">
+  <link rel="stylesheet" type="text/css" href="icomoon/style.css">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../jquery-ui.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+
+    var videoContent = [
+      {
+        time: '0:00:00.000',
+        src: 'av/das-paradies-fuer-wintersportler.jpg',
+        text: ''
+      },
+      {
+        time: '0:00:10.000',
+        src: 'av/endlos-weite-schwuenge-ueber-perfekt-praeparierte-pisten-ziehen.jpg',
+        text: ''
+      },
+      {
+        time: '0:00:17.500',
+        src: 'av/fruehlings-special-top-of-tyrol.jpg',
+        text: ''
+      },
+    ]
+
+    $(document).ready(function(){
+      $('video').each(function(){
+        this.muted = true;
+        this.volume = 0;
+        this.loop = true;
+        this.playbackRate = 1;
+
+        var getSeconds = function(s) {
+          var temp = s.split(':');
+          return temp[2]*1+temp[1]*60+temp[0]*3600;
+        }
+
+        this.ontimeupdate = function(){
+          for( var i = 0; i<videoContent.length; i++ ) {
+            if(getSeconds(videoContent[i].time) > this.currentTime) break;
+          }
+          if( i > 0 ){
+            $('#overlay').html('<img src="' + videoContent[i-1].src + '">');
+          }
+          console.log(this.currentTime);
+        }
+      });
+
+      $( "#slider" ).slider({
+        min: 0.25,
+        max: 4,
+        value: 1,
+        slide:function(e,ui) {
+          $('video').each(function(){
+            this.playbackRate = ui.value;
+          })
+        }
+      });
+    });
+
+	</script>
+	<style>
+  #background-wrapper {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: -1;
+  }
+  #background-video {
+    pointer-events: none;
+    min-width: 50%;
+    min-height: 70%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+  }
+  #slider {
+    width: 150px;
+    display: inline-block;
+    margin-left: 25px;
+  }
+  button {
+    background: transparent;
+    border: none;
+  }
+  button span {
+    font-family: Arial;
+  }
+	</style>
+</head>
+<body>
+  <div id="background-wrapper">
+    <video id="background-video" autoplay>
+      <source src="av/Pitztaler_Gletscher.mp4">
+    </video>
+  </div>
+  <div id="wrapper">
+  <button class="btn icon-play3"><span>Play</span></button>
+  <button class="btn icon-stop2"><span>Stop</span></button>
+    <div id="slider"></div>
+    <div id="overlay"></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+    /*
+
+      touchstart
+      touchmove
+      touchend
+
+      deviceorientation
+      devicemotion
+      orientationchange
+
+    */
+    var imgContent = [
+      { src: 'av/das-paradies-fuer-wintersportler.jpg' },
+      { src: 'av/endlos-weite-schwuenge-ueber-perfekt-praeparierte-pisten-ziehen.jpg' },
+      { src: 'av/fruehlings-special-top-of-tyrol.jpg' },
+    ]
+    imgContent.i = 0;
+
+    var clickEvent = 'ontouchstart' in window ? 'touchstart' : 'click';
+
+    $(document).on('touchend', '#image-wrapper img' , function(e){
+      var clientX = e.originalEvent.changedTouches[0].clientX;
+      if(clientX - $(this).data('touchstartX') > 50){
+        $(this).trigger('nachrechts');
+      } else if(clientX - $(this).data('touchstartX') < 50) {
+        $(this).trigger('nachlinks');
+      }
+    });
+
+    $(document).on('nachrechts', '#image-wrapper img', function(e){
+        imgContent.i--;
+        if(imgContent.i < 0) imgContent.i++;
+        $('#image-wrapper img').attr('src', imgContent[imgContent.i].src);
+    });
+
+    $(document).on('nachlinks', '#image-wrapper img', function(e){
+        imgContent.i++;
+        if (imgContent.i == imgContent.length) imgContent.i--;
+        $('#image-wrapper img').attr('src', imgContent[imgContent.i].src);
+    });
+
+    $(document).on(clickEvent, '#image-wrapper img', function(e){
+      var clientX = e.clientX || e.originalEvent.targetTouches[0].clientX;
+
+      if (clickEvent == 'touchstart'){
+        $(this).data('touchstartX', clientX);
+        return false;
+      }
+
+
+      if (clientX - $(this).offset().left > 200){
+        $(this).trigger('nachlinks');
+      } else {
+        $(this).trigger('nachrechts');
+      }
+
+      $('#image-wrapper img').attr('src', imgContent[imgContent.i].src);
+    });
+	</script>
+	<style>
+
+    #image-wrapper img {
+      max-width: 400px;
+      height: auto;
+    }
+
+	</style>
+</head>
+<body>
+
+  <div id="image-wrapper">
+    <img src="av/das-paradies-fuer-wintersportler.jpg">
+  </div>
+
+
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" href="../jquery-ui.min.css">
+  <link rel="stylesheet" type="text/css" href="icomoon/style.css">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../jquery-ui.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+		var allAudio = ['drums.mp3', 'organ.mp3', 'guitar.mp3'];
+
+    $(document).ready(function(){
+      $( "#slider" ).slider({
+        slide:function(e,ui) {
+          $('#drums').get(0).volume = ui.value / 100;
+          $('#organ').get(0).volume = ui.value / 100;
+          $('#guitar').get(0).volume = ui.value / 100;
+        }
+      });
+    });
+
+    $(document).on('click', '.icon-play3', function(){
+      stopMusic();
+      if($('#drums-check').prop('checked')){
+        $('#drums').get(0).play();
+      }
+      if($('#organ-check').prop('checked')){
+        $('#organ').get(0).play();
+      }
+      if($('#guitar-check').prop('checked')){
+        $('#guitar').get(0).play();
+      }
+    });
+    $(document).on('click', '.icon-stop2', function(){
+      setTimeToStart();
+      stopMusic();
+    });
+
+    var setTimeToStart = function(){
+      $('#drums').get(0).currentTime = 0;
+      $('#organ').get(0).currentTime = 0;
+      $('#guitar').get(0).currentTime = 0;
+    }
+
+    var stopMusic = function() {
+      setTimeToStart();
+      $('#drums').get(0).pause();
+      $('#organ').get(0).pause();
+      $('#guitar').get(0).pause();
+    }
+
+
+    /*
+    $(document).on('click', '.icon-volume-mute', function(){
+      $('#testaudio').get(0).volume = 0;
+    });
+    $(document).on('click', '.icon-volume-medium', function(){
+      $('#testaudio').get(0).volume = .5;
+    });
+    $(document).on('click', '.icon-volume-high', function(){
+      $('#testaudio').get(0).volume = 1;
+    });
+    */
+
+	</script>
+	<style>
+    button { cursor: pointer; }
+    button span { font-family: Arial; display: inline-block; margin-left: 5px;}
+    #slider { width: 100px; }
+	</style>
+</head>
+<body>
+  <button class="btn icon-play3"><span>Play</span></button>
+  <button class="btn icon-stop2"><span>Stop</span></button>
+  <!--
+    <button class="btn icon-volume-mute"><span>Mute</span></button>
+    <button class="btn icon-volume-medium"><span>Medium</span></button>
+    <button class="btn icon-volume-high"><span>Max</span></button>
+  -->
+  <br><br>
+  <div id="slider"></div>
+  <br><br>
+  <input type="checkbox" id="drums-check"><label>drums</label>
+  <input type="checkbox" id="organ-check"><label>organ</label>
+  <input type="checkbox" id="guitar-check"><label>guitar</label>
+  <br><br>
+    drums<br>
+  <audio id="drums" controls>
+    <source src="av/drums.mp3">
+  </audio><br><br>
+    organ<br>
+  <audio id="organ" controls>
+    <source src="av/organ.mp3">
+  </audio><br><br>
+    guitar<br>
+  <audio id="guitar" controls>
+    <source src="av/guitar.mp3">
+  </audio>
+</body>
+</html>
