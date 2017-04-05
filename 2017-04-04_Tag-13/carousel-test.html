@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+
+	</script>
+	<style>
+	</style>
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <link rel="stylesheet" type="text/css" href="../qunit-2.3.0.css">
+	<script src="../qunit-2.3.0.js"></script>
+	<script>
+		QUnit.test('Test Preloader Klasse', function(assert) {
+			assert.ok( typeof new Preloader() == 'object', 'Preloader Konstrukor liefert objekt');
+			assert.ok( 'Bild vorhanden' )
+		});
+	</script>
+	<script src="carousel.js"></script>
+
+	<div id="carousel-container">
+
+	</div>
+</body>
+</html>

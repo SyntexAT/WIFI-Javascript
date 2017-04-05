@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="krieger.css">
+  <script src="jquery-3.1.1.min.js"></script>
+	<script>
+    var webserviceURL = 'http://127.0.0.1:3333/';
+
+    $(document).on('click', '#getAll', function(){
+      var tier = $('#tierSelect').val();
+      $.ajax({
+        url:webserviceURL+tier,
+        type:'GET',
+        success:function(data){
+          $('#dataTable').empty();
+          var tiere = [];
+          for(var i in data.data){
+            if (data.data[i] != null) {
+              var tr = $('<tr>').appendTo('#dataTable');
+              $('<td>').html(i).appendTo(tr);
+              $('<td>').html(data.data[i].name).appendTo(tr);
+              $('<td>').html(data.data[i].kg).appendTo(tr);
+              $('<td>').html('<span data-tierid="' + i + '" class="edit">edit</span>').appendTo(tr);
+              $('<td>').html('<span data-tierid="' + i + '" class="delete">delete</span>').appendTo(tr);
+            }
+          }
+
+         },
+        error: function(){ console.error(arguments); }
+      })
+    });
+    $(document).on('click', '#getOne', function(){
+      $.ajax({
+        url:webserviceURL+'0',
+        type:'GET',
+        data:{name:'Mungo',kg:2500},
+        success:function(data){ console.log(data); },
+        error: function(){ console.error(arguments); }
+      });
+    });
+    $(document).on('click', '#post', function(){
+      $.ajax({
+        url:webserviceURL,
+        type:'POST',
+        data:{name:'Mungo',kg:2500},
+        success:function(data){ console.log(data); },
+        error: function(){ console.error(arguments); }
+      });
+    });
+
+    $(document).on('click', '.edit', function(){
+      $.ajax({
+        url:webserviceURL+'0',
+        type:'PUT',
+        data:{name:'Dumbo',kg:2000},
+        success:function(data){ console.log(data); },
+        error: function(){ console.error(arguments); }
+      });
+    });
+
+    $(document).on('click', '.delete', function(){
+      log($(this).data('tierid'));
+      /*
+      $.ajax({
+        url:webserviceURL+'0',
+        type:'DELETE',
+        success:function(data){ console.log(data); },
+        error: function(){ console.error(arguments); }
+    });*/
+  });
+
+	</script>
+	<style>
+	</style>
+</head>
+<body>
+  <label>Tier:</label><select id="tierSelect">
+    <option>Bitte auswählen!</option>
+    <option value="elefanten">Elefanten</option>
+    <option value="tiger">Tiger</option>
+  </select><br>
+  <label>ID:</label><input type="text" name="id" id="idInput"><br>
+  <label>Name:</label><input type="text" name="name" id="nameInput"><br>
+  <label>Gewicht:</label><input type="text" name="gewicht" id="gewichtInput"><br>
+  <button class="btn" id="getAll">Get all</button>
+  <button class="btn" id="getOne">Get one</button>
+  <button class="btn" id="post">Post</button>
+  <button class="btn" id="put">Put</button>
+  <button class="btn" id="delete">Delete</button>
+  <table id="dataTable">
+  </table>
+</body>
+</html>

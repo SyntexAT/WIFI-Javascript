@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="krieger.css">
+  <script src="jquery-3.1.1.min.js"></script>
+	<script>
+    $(document).on('click', '#save', function(e){
+      e.preventDefault();
+      var name = $('#nameInput').val();
+      $.ajax({
+        url: 'http://127.0.0.1:12345/save',
+        method: 'POST',
+        data: {name: name},
+        success: function(data){
+          try {
+            data = JSON.parse(data);
+          } catch(e){}
+          if(data.saved) {
+            alert('Danke')
+          } else {
+            alert('Da ging was schief.')
+          }
+        },
+        error: function(){
+          console.log('nope');
+        }
+      })
+    });
+
+    $(document).on('click', '#show', function(){
+      window.location.href = "/daten"
+    });
+	</script>
+	<style>
+	</style>
+</head>
+<body>
+  <label>Name:<br>
+  <input type="text" name="name" id="nameInput"><br>
+  <button id="save">Speichern</button><button id="show">Daten anzeigen</button>
+</body>
+</html>
