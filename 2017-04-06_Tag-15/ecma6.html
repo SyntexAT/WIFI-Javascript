@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+    var umkreis = function( r ){
+      return 2*r*Math.PI;
+    }
+    var zylinderVolumen = function( d,h ){
+      return Math.pow(d/2,2)*Math.PI*h;
+    }
+
+    var u = umkreis(5);
+    var vol = zylinderVolumen(3,10);
+
+    // ARROW Funktionen
+    var r = 5;
+    u = r => 2 * r * Math.PI;
+
+    var d = 3;
+    var h = 10;
+    vol = (d,h) => {return Math.pow(d/2,2) * Math.PI * h}
+
+
+    // Standardwerte für Parameter
+    var ausgabe = function(text = 'text',id = 'ausgabe',farbe = '#eeeeee') {
+      $('#'+id).html(text).css({color:farbe});
+    }
+
+    // Script einbinden
+    import {cube} from 'cube.js';
+    console.log('Cube: ' cube(2,2,2));
+	</script>
+	<style>
+
+	</style>
+</head>
+<body>
+</body>
+</html>
