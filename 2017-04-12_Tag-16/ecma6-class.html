@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../krieger.css">
+  <script src="../jquery-3.1.1.min.js"></script>
+  <script src="../functions.js"></script>
+	<script>
+
+    class Animal {
+      constructor(weight) {
+        this.weight = weight;
+      }
+
+      getWeight() {
+        return this.weight/1000 + 't';
+      }
+
+      // Static Function - kann nur mit der Constructor Class aufgerufen werden *
+      static kg2t(kg) {
+        return kg/1000;
+      }
+
+    }
+
+    class Elefant extends Animal {
+      constructor( weight, age) {
+        super( weight*1000 )
+        this._age = age;
+      }
+      get age(){
+        return this._age;
+      }
+    }
+
+    var zebra = new Animal(400);
+    console.log(zebra.getWeight());
+
+    // *
+    console.log(Animal.kg2t(1500));
+
+    var dumbo = new Elefant(2,15);
+    dumbo.age = 100;
+    console.log(dumbo.age);
+
+	</script>
+	<style>
+	</style>
+</head>
+<body>
+</body>
+</html>
